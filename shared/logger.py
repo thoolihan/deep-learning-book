@@ -9,6 +9,9 @@ _setup = False
 _name = os.path.basename(inspect.stack()[-1][1]).replace(".py", "")
 log_dir = "{}/../logs".format(os.path.dirname(__file__))
 
+def get_filename():
+    return _name
+
 def get_start_time():
     return _start_time if _start_time else datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
 
