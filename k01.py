@@ -32,9 +32,9 @@ test_df.Age.fillna(train_df.Age.mean(), inplace=True)
 # Labels to Categories
 logger.info("categorizing data")
 le_sex = LabelEncoder()
-le_sex.fit(train_df.Sex.append(test_df.Sex))
+le_sex.fit(train_df.Sex)
 le_emb = LabelEncoder()
-le_emb.fit(train_df.Embarked.append(test_df.Embarked))
+le_emb.fit(train_df.Embarked)
 
 train_df.Sex = le_sex.transform(train_df.Sex)
 test_df.Sex = le_sex.transform(test_df.Sex)
