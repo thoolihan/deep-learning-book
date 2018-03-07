@@ -1,15 +1,14 @@
 import matplotlib.pyplot as plt
 
-def plot_metric(history, fig=plt, met_idx="loss", met_name="Loss"):
+def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
     loss = history.history[met_idx]
     val_loss = history.history['val_{}'.format(met_idx)]
     epochs = range(1, len(loss) + 1)
-    fig.plot(epochs, loss, 'r-o', label='Training')
-    fig.plot(epochs, val_loss, 'b-o', label='Validation')
-    fig.set_xlabel('Epochs')
-    fig.set_ylabel(met_name)
-    fig.legend()
-    return fig
+    ax.plot(epochs, loss, 'r-', label='Training')
+    ax.plot(epochs, val_loss, 'b-', label='Validation')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel(met_name)
+    ax.legend()
 
 def plot_all(history):
     combined = plt.figure()
