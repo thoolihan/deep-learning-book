@@ -110,7 +110,7 @@ test_df.to_csv(fname, index=True, columns = ['Survived'])
 logger.info("created {}".format(fname))
 
 logger.info("saving plot of loss and accuracy")
-plots = plot_all(history)
+plots = plot_all(history, metrics = {'acc': 'Accuracy', 'f1_score': 'F1'})
 pname = "{}/{}-{}.png".format(OUTPUT_DIR, get_filename(), get_start_time())
 plots.savefig(pname)
 logger.info("created {}".format(pname))
