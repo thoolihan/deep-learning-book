@@ -1,9 +1,15 @@
 import numpy as np
 import pandas as pd
-from keras import layers, models, optimizers, losses
+from keras import layers, models, optimizers, losses, regularizers
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
-from sklearn.model_selection import train_test_split
 from shared.logger import get_logger, get_start_time, get_filename
+from shared.plot_history import plot_all
+
+OUTPUT_DIR="output/titanic"
+DRO = 0.5
+L2R = 0.001
+EPOCHS = 20
+BATCH_SIZE = 256
 
 logger = get_logger()
 
@@ -64,14 +70,16 @@ X_test = encoder.transform(X_test)
 
 logger.info("building model")
 model = models.Sequential()
-DRO = 0.5
-model.add(layers.Dense(1024, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(layers.Dense(1024,
+                       activation='relu',
+                       input_shape=(X_train.shape[1],),
+                       kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
 model.add(layers.Dense(1, activation='sigmoid'))
 
@@ -82,13 +90,17 @@ model.compile(optimizer='rmsprop',
 logger.info("fitting model")
 history = model.fit(X_train.todense(),
                    y_train,
-                   epochs=150,
-                   batch_size=256,
+                   epochs=EPOCHS,
+                   batch_size=BATCH_SIZE,
                    validation_split=.2,
                    shuffle=True)
 
 logger.info("saving results")
 test_df['Survived'] = np.round(model.predict(X_test.todense())).astype('int')
-fname = "output/titanic/{}-{}.csv".format(get_filename(), get_start_time())
+fname = "{}/{}-{}.csv".format(OUTPUT_DIR, get_filename(), get_start_time())
 test_df.to_csv(fname, index=True, columns = ['Survived'])
 logger.info("created {}".format(fname))
+
+plots = plot_all(history)
+pname = "{}/{}-{}.png".format(OUTPUT_DIR, get_filename(), get_start_time())
+plots.savefig(pname)
