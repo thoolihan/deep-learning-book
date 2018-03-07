@@ -1,18 +1,21 @@
 import numpy as np
 import pandas as pd
+import os
 from keras import layers, models, optimizers, losses, regularizers
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
-from shared.logger import get_logger, get_start_time, get_filename
+from shared.logger import get_logger, get_start_time, get_filename, get_curr_time
 from shared.plot_history import plot_all
+from shared.utility import open_plot
 
 OUTPUT_DIR="output/titanic"
 DRO = 0.5
 L2R = 0.001
-EPOCHS = 20
+EPOCHS = 100
 BATCH_SIZE = 256
 
 logger = get_logger()
 
+logger.info("running on {}".format(os.name))
 logger.info("loading data")
 cols = ['PassengerId', 'Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Embarked']
 dtypes = {
@@ -70,16 +73,14 @@ X_test = encoder.transform(X_test)
 
 logger.info("building model")
 model = models.Sequential()
-model.add(layers.Dense(1024,
+model.add(layers.Dense(512,
                        activation='relu',
                        input_shape=(X_train.shape[1],),
                        kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
+model.add(layers.Dense(256, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
-model.add(layers.Dropout(DRO))
-model.add(layers.Dense(512, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
+model.add(layers.Dense(256, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
 model.add(layers.Dense(1, activation='sigmoid'))
 
@@ -101,6 +102,11 @@ fname = "{}/{}-{}.csv".format(OUTPUT_DIR, get_filename(), get_start_time())
 test_df.to_csv(fname, index=True, columns = ['Survived'])
 logger.info("created {}".format(fname))
 
+logger.info("saving plot of loss and accuracy")
 plots = plot_all(history)
 pname = "{}/{}-{}.png".format(OUTPUT_DIR, get_filename(), get_start_time())
 plots.savefig(pname)
+logger.info("created {}".format(pname))
+logger.info("finished at {}".format(get_curr_time()))
+
+open_plot(pname)
