@@ -12,8 +12,11 @@ log_dir = "{}/../logs".format(os.path.dirname(__file__))
 def get_filename():
     return _name
 
+def get_curr_time():
+    return datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
+
 def get_start_time():
-    return _start_time if _start_time else datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
+    return _start_time if _start_time else get_curr_time()
 
 _start_time = get_start_time()
 
