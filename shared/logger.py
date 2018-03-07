@@ -21,14 +21,14 @@ def get_start_time():
 _start_time = get_start_time()
 
 # Import and use this
-def get_logger():
+def get_logger(level = logging.DEBUG):
     if not(_setup):
-        setup_logger()
+        setup_logger(level)
     return logging.getLogger(_name)
 
 # Never expose this
 # Create a custom logger, because ai gym environment seems to hijack default logger
-def setup_logger(level = logging.DEBUG):
+def setup_logger(level):
     file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     cli_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
