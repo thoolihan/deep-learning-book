@@ -8,8 +8,10 @@ from shared.plot_history import plot_all
 from shared.utility import open_plot
 
 OUTPUT_DIR="output/titanic"
-DRO = 0.5
-L2R = 0.001
+DRO = 0.0
+L2R = 0.0001
+ILAYER = 1024
+HLAYER = 512
 EPOCHS = 100
 BATCH_SIZE = 256
 
@@ -30,6 +32,8 @@ dtypes_tr = dtypes.copy()
 dtypes_tr['Survived'] = 'float32'
 train_df = pd.read_csv("data/titanic/train.csv", usecols=cols_tr, index_col = 'PassengerId', dtype=dtypes)
 test_df = pd.read_csv("data/titanic/test.csv", usecols=cols, index_col = 'PassengerId', dtype=dtypes_tr)
+
+## PREPROCESS ##
 
 # Impute
 logger.info("imputing data")
@@ -73,20 +77,22 @@ X_test = encoder.transform(X_test)
 
 logger.info("building model")
 model = models.Sequential()
-model.add(layers.Dense(512,
+model.add(layers.Dense(ILAYER,
                        activation='relu',
                        input_shape=(X_train.shape[1],),
                        kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(256, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
+model.add(layers.Dense(HLAYER, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(256, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
+model.add(layers.Dense(HLAYER, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='rmsprop',
              loss='binary_crossentropy',
              metrics=['accuracy'])
+
+logger.info(model.summary())
 
 logger.info("fitting model")
 history = model.fit(X_train.todense(),
