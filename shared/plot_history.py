@@ -13,12 +13,19 @@ def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
     ax.set_ylabel(met_name)
     ax.legend()
 
-def plot_all(history):
+def plot_all(history, metrics = {'acc': 'Accuracy'}):
+    metric_count = 1+len(metrics)
+    i = 1
     combined = plt.figure()
-    ax1 = combined.add_subplot(2,1,1)
+    # plot loss
+    ax1 = combined.add_subplot(metric_count,1,i)
     plot_metric(history, ax1)
-    ax2 = combined.add_subplot(2,1,2, sharex=ax1)
-    plot_metric(history, ax2, 'acc', 'Accuracy')
+
+    # plot other metrics
+    for idx, name in metrics.items():
+        i += 1
+        axn = combined.add_subplot(metric_count,1,i)
+        plot_metric(history, axn, idx, name)
     plt.tight_layout(1.)
     combined.show()
     return combined
