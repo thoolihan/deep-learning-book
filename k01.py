@@ -6,6 +6,7 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 from shared.logger import get_logger, get_start_time, get_filename, get_curr_time
 from shared.plot_history import plot_all
 from shared.utility import open_plot
+from shared.metrics import f1_score
 
 OUTPUT_DIR="output/titanic"
 DRO = 0.0
@@ -90,7 +91,7 @@ model.add(layers.Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='rmsprop',
              loss='binary_crossentropy',
-             metrics=['accuracy'])
+             metrics=['accuracy', f1_score])
 
 logger.info(model.summary())
 
