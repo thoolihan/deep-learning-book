@@ -33,6 +33,7 @@ dtypes_tr = dtypes.copy()
 dtypes_tr['Survived'] = 'float32'
 train_df = pd.read_csv("data/titanic/train.csv", usecols=cols_tr, index_col = 'PassengerId', dtype=dtypes)
 test_df = pd.read_csv("data/titanic/test.csv", usecols=cols, index_col = 'PassengerId', dtype=dtypes_tr)
+train_df = train_df.sample(frac=1)
 
 ## PREPROCESS ##
 
