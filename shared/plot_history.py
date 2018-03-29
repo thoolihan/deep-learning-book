@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
 def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
+
     loss = history.history[met_idx]
     epochs = range(1, len(loss) + 1)
     ax.plot(epochs, loss, 'r-', label='Training')
@@ -11,21 +12,32 @@ def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
         ax.plot(epochs, val_loss, 'b-', label='Validation')
     ax.set_xlabel('Epochs')
     ax.set_ylabel(met_name)
-    ax.legend()
+    #ax.legend()
 
-def plot_all(history, metrics = {'acc': 'Accuracy'}):
-    metric_count = 1+len(metrics)
-    i = 1
+def plot_all(history_data, metrics = {'acc': 'Accuracy'}):
+    if not isinstance(history_data, list):
+        history_data = [history_data]
+    metric_count = len(metrics) + 1
+    col = 1
     combined = plt.figure()
+    folds = len(history_data)
     # plot loss
-    ax1 = combined.add_subplot(metric_count,1,i)
-    plot_metric(history, ax1)
 
-    # plot other metrics
-    for idx, name in metrics.items():
-        i += 1
-        axn = combined.add_subplot(metric_count,1,i)
-        plot_metric(history, axn, idx, name)
+    for fold in range(folds):
+        row = 0
+        plt_idx = row * folds + fold + 1
+        ax1 = combined.add_subplot(metric_count, folds, plt_idx)
+        print("Plotting Loss for fold {} with index of {}".format(fold, plt_idx))
+        plot_metric(history_data[fold], ax1)
+
+        # plot other metrics
+        for idx, name in metrics.items():
+            row += 1
+            plt_idx = row * folds + fold + 1
+            axn = combined.add_subplot(metric_count, folds, plt_idx)
+            print("Plotting {} for fold {} with index of {}".format(name, fold, plt_idx))
+            plot_metric(history_data[fold], axn, idx, name)
     plt.tight_layout(1.)
+    combined.legend()
     combined.show()
     return combined
