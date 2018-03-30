@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
 def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
-
     loss = history.history[met_idx]
     epochs = range(1, len(loss) + 1)
     ax.plot(epochs, loss, 'r-', label='Training')
@@ -12,7 +11,6 @@ def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
         ax.plot(epochs, val_loss, 'b-', label='Validation')
     ax.set_xlabel('Epochs')
     ax.set_ylabel(met_name)
-    #ax.legend()
 
 def plot_all(history_data, metrics = {'acc': 'Accuracy'}):
     if not isinstance(history_data, list):
@@ -21,9 +19,9 @@ def plot_all(history_data, metrics = {'acc': 'Accuracy'}):
     col = 1
     combined = plt.figure()
     folds = len(history_data)
-    # plot loss
 
     for fold in range(folds):
+        # plot loss
         row = 0
         plt_idx = row * folds + fold + 1
         ax1 = combined.add_subplot(metric_count, folds, plt_idx)
@@ -38,6 +36,6 @@ def plot_all(history_data, metrics = {'acc': 'Accuracy'}):
             print("Plotting {} for fold {} with index of {}".format(name, fold, plt_idx))
             plot_metric(history_data[fold], axn, idx, name)
     plt.tight_layout(1.)
-    combined.legend()
+    plt.legend()
     combined.show()
     return combined
