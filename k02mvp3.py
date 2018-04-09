@@ -2,8 +2,9 @@ import pandas as pd
 import os
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 from shared.logger import get_logger, get_start_time, get_filename, get_curr_time
 from shared.donors.transform import count_essays, ESSAY_COUNT
 
@@ -15,12 +16,22 @@ INDEX_COL="id"
 LABEL = 'project_is_approved'
 CREATE_OUTPUT = True
 FEATURES = ['teacher_number_of_previously_posted_projects']
-OHE_FEATURES = ['school_state', 'project_subject_categories']
+OHE_FEATURES = ['school_state', 'project_subject_categories', 'teacher_id', 'teacher_prefix', 'project_grade_category']
 ESSAY_COLS =  ['project_essay_1', 'project_essay_2', 'project_essay_3', 'project_essay_4']
-COLS = [INDEX_COL] + FEATURES + ESSAY_COLS
+COLS = [INDEX_COL] + FEATURES + OHE_FEATURES + ESSAY_COLS
 COLS_TR = COLS + [LABEL]
 DTYPES = {
-    'teacher_number_of_previously_posted_projects': 'int64'
+    'id': str,
+    'teacher_number_of_previously_posted_projects': int,
+    'school_state': str,
+    'project_sub_categories': str,
+    'teacher_id': str,
+    'teacher_prefix': str,
+    'project_grade_category': str,
+    'project_essay_1': str,
+    'project_essay_2': str,
+    'project_essay_3': str,
+    'project_essay_4': str
 }
 DTYPES_TR = DTYPES.copy()
 DTYPES_TR[LABEL] = np.float32
@@ -40,15 +51,29 @@ train_df = train_df.drop(columns = ESSAY_COLS)
 test_df = count_essays(test_df)
 test_df = test_df.drop(columns = ESSAY_COLS)
 
-
-
-# model
-model = LogisticRegression()
+# Encode features
+#  dict of encoders for later saving if need be
+lencoders = {}
+for col in OHE_FEATURES:
+    # String to int
+    lencoders[col] = LabelEncoder()
+    lencoders[col].fit((train_df[col]).append(test_df[col]))
+    train_df[col] = lencoders[col].transform(train_df[col])
+    test_df[col] = lencoders[col].transform(test_df[col])
 
 # to matrix
 X_train = train_df.drop(columns = [LABEL]).as_matrix()
 y_train = train_df[LABEL]
 X_test = test_df.as_matrix()
+
+# Categorical ints to bit field
+col_mask = [col in OHE_FEATURES for col in train_df.drop(columns = [LABEL]).columns.values]
+ohe = OneHotEncoder(sparse=False, categorical_features=col_mask, handle_unknown='ignore')
+X_train = ohe.fit_transform(X_train)
+X_test = ohe.fit_transform(X_test)
+
+# model
+model = LogisticRegression()
 
 logger.debug("Training data has shapes of X: {} y: {}".format(X_train.shape, y_train.shape))
 logger.debug("Test data has shapes of X: {}".format(X_test.shape))
