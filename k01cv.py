@@ -75,10 +75,10 @@ X_test = test_df.as_matrix()
 # One Hot
 logger.info("encoding data")
 cats = [True, False, False, False, False, True]
-encoder = OneHotEncoder(categorical_features = cats, handle_unknown='ignore')
+encoder = OneHotEncoder(sparse=False, categorical_features = cats, handle_unknown='ignore')
 encoder.fit(X_train)
-X_train = encoder.transform(X_train).todense()
-X_test = encoder.transform(X_test).todense()
+X_train = encoder.transform(X_train)
+X_test = encoder.transform(X_test)
 
 logger.info("building model")
 model = models.Sequential()
@@ -141,7 +141,7 @@ if READY:
               batch_size=BATCH_SIZE)
 
     logger.info("saving test results")
-    test_df['Survived'] = np.round(model.predict(X_test.todense())).astype('int')
+    test_df['Survived'] = np.round(model.predict(X_test)).astype('int')
     fname = "{}/{}-{}.csv".format(OUTPUT_DIR, get_filename(), get_start_time())
     test_df.to_csv(fname, index=True, columns = ['Survived'])
     logger.info("created {}".format(fname))

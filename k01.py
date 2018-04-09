@@ -72,7 +72,7 @@ X_test = test_df.as_matrix()
 # One Hot
 logger.info("encoding data")
 cats = [True, False, False, False, False, True]
-encoder = OneHotEncoder(categorical_features = cats, handle_unknown='ignore')
+encoder = OneHotEncoder(sparse=False, categorical_features = cats, handle_unknown='ignore')
 encoder.fit(X_train)
 X_train = encoder.transform(X_train)
 X_test = encoder.transform(X_test)
@@ -97,7 +97,7 @@ model.compile(optimizer='rmsprop',
 logger.info(model.summary())
 
 logger.info("fitting model")
-history = model.fit(X_train.todense(),
+history = model.fit(X_train,
                    y_train,
                    epochs=EPOCHS,
                    batch_size=BATCH_SIZE,
@@ -105,7 +105,7 @@ history = model.fit(X_train.todense(),
                    shuffle=True)
 
 logger.info("saving results")
-test_df['Survived'] = np.round(model.predict(X_test.todense())).astype('int')
+test_df['Survived'] = np.round(model.predict(X_test)).astype('int')
 fname = "{}/{}-{}.csv".format(OUTPUT_DIR, get_filename(), get_start_time())
 test_df.to_csv(fname, index=True, columns = ['Survived'])
 logger.info("created {}".format(fname))
