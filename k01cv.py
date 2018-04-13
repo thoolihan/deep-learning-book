@@ -101,7 +101,7 @@ num_val_samples = len(train_df) // K_FOLDS
 
 logger.info(model.summary())
 
-logger.info("fitting model")
+logger.info("validating model")
 for i in range(K_FOLDS):
     logger.info("cross validation fold {}".format(i))
     val_data = X_train[i * num_val_samples : (i+1) * num_val_samples,:]
