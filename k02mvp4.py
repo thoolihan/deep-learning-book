@@ -17,7 +17,7 @@ OUTPUT_DIR="output/{}".format(PROJECT_NAME)
 INDEX_COL="id"
 LABEL = 'project_is_approved'
 CREATE_OUTPUT = True
-CLEAR_CACHE=False
+CLEAR_CACHE=True
 FEATURES = ['teacher_number_of_previously_posted_projects']
 OHE_FEATURES = ['school_state', 'project_subject_categories', 'teacher_prefix', 'project_grade_category']
 ESSAY_COLS =  ['project_essay_1', 'project_essay_2', 'project_essay_3', 'project_essay_4']
@@ -68,6 +68,10 @@ if cached_numpy_file.exists() and not(CLEAR_CACHE):
         y_train = cached_info['y_train']
         X_test = cached_info['X_test']
 else:
+    if CLEAR_CACHE:
+        logger.info("CLEAR_CACHE is True")
+    if not cached_numpy_file.exists():
+        logger.info("{} does not exist".format(cached_numpy_file))
     logger.info("reading original train file")
     train_df = pd.read_csv("{}/train.zip".format(INPUT_DIR), usecols=COLS_TR, index_col = INDEX_COL, dtype=DTYPES)
     train_df = train_df.sample(frac=1)
@@ -84,8 +88,17 @@ else:
     test_df = test_df.drop(columns = ESSAY_COLS)
 
     # add resource cost
+    logger.info("add in resource totals")
     train_df = train_df.merge(sums_df, how='left', left_index=True, right_index=True)
     test_df = test_df.merge(sums_df, how='left', left_index=True, right_index=True)
+
+    # Scale features
+    logger.info("scaling columns")
+    ss = StandardScaler()
+    cont_cols = ['teacher_number_of_previously_posted_projects', 'total']
+    ss.fit(train_df[cont_cols])
+    train_df[cont_cols] = ss.transform(train_df[cont_cols])
+    test_df[cont_cols] = ss.transform(test_df[cont_cols])
 
     # Encode features
     logger.info("encoding dummy variables")
