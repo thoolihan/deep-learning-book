@@ -18,3 +18,8 @@ def count_essays(df):
     df[ESSAY_COUNT] = df[ESSAY_COUNT].add(df.project_essay_3.map(has_content))
     df[ESSAY_COUNT] = df[ESSAY_COUNT].add(df.project_essay_4.map(has_content))
     return df
+
+def resources_total(df):
+    df['subtotal'] = df['quantity'].multiply(df['price'])
+    return pd.DataFrame(df.groupby(['id'])['subtotal'].sum())
+
