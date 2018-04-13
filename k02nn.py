@@ -3,6 +3,7 @@ import os
 import numpy as np
 from keras import layers, models, optimizers, losses, regularizers
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 from shared.logger import get_logger, get_start_time, get_filename, get_curr_time
 from shared.donors.transform import count_essays, ESSAY_COUNT, resources_total
@@ -30,7 +31,7 @@ ILAYER = 1024
 HLAYER = 512
 EPOCHS = 2
 BATCH_SIZE = 256
-K_FOLDS = 5
+K_FOLDS = 3
 DTYPES = {
     'id': object,
     'teacher_number_of_previously_posted_projects': int,
@@ -169,6 +170,8 @@ for i in range(K_FOLDS):
                         validation_data=(val_data, val_labels),
                         shuffle=True,
                         verbose=0)
+    history.history['roc_auc'] = roc_auc_score(val_labels, model.predict(val_data))
+    logger.info("roc_auc on validation data is {}".format(history.history['roc_auc']))
     histories.append(history)
 
 logger.info("saving plot of loss and accuracy")
