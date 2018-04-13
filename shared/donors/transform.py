@@ -21,5 +21,5 @@ def count_essays(df):
 
 def resources_total(df):
     df['subtotal'] = df['quantity'].multiply(df['price'])
-    return pd.DataFrame(df.groupby(['id'])['subtotal'].sum())
+    return pd.DataFrame(df.groupby(['id'])['subtotal'].sum().rename('total'))
 
