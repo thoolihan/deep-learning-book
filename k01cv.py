@@ -11,9 +11,9 @@ from shared.metrics import f1_score
 OUTPUT_DIR="output/titanic"
 DRO = 0.0
 L2R = 0.0001
-ILAYER = 1024
-HLAYER = 512
-EPOCHS = 75
+ILAYER = 2048
+HLAYER = 1024
+EPOCHS = 10
 BATCH_SIZE = 256
 K_FOLDS = 5
 READY = False
@@ -89,8 +89,6 @@ model.add(layers.Dense(ILAYER,
 model.add(layers.Dropout(DRO))
 model.add(layers.Dense(HLAYER, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
 model.add(layers.Dropout(DRO))
-model.add(layers.Dense(HLAYER, activation='relu', kernel_regularizer=regularizers.l2(L2R)))
-model.add(layers.Dropout(DRO))
 model.add(layers.Dense(1, activation='sigmoid'))
 
 model.compile(optimizer='rmsprop',
@@ -121,7 +119,7 @@ for i in range(K_FOLDS):
                         batch_size=BATCH_SIZE,
                         validation_data=(val_data, val_labels),
                         shuffle=True,
-                        verbose=0)
+                        verbose=1)
     histories.append(history)
 
 logger.info("saving plot of loss and accuracy")
