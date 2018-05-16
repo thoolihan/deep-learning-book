@@ -15,7 +15,7 @@ OUTPUT_DIR="output/{}".format(PROJECT_NAME)
 DRO = 0.25
 L2R = 0.0001
 HLAYER = 64
-EPOCHS = 2
+EPOCHS = 4
 BATCH_SIZE = 256
 
 OUTPUT_DIR="output/ex05"
@@ -42,6 +42,7 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 
 model.add(layers.Flatten())
 model.add(layers.Dense(HLAYER, activation='relu'))
+model.add(layers.Dropout(DRO))
 model.add(layers.Dense(10, activation='softmax'))
 
 model.compile(optimizer = 'rmsprop',
