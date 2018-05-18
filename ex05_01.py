@@ -15,8 +15,8 @@ OUTPUT_DIR="output/{}".format(PROJECT_NAME)
 DRO = 0.25
 L2R = 0.0001
 HLAYER = 64
-EPOCHS = 4
-BATCH_SIZE = 256
+EPOCHS = 5
+BATCH_SIZE = 64
 
 OUTPUT_DIR="output/ex05"
 logger = get_logger()
