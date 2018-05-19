@@ -18,7 +18,6 @@ HLAYER = 64
 EPOCHS = 5
 BATCH_SIZE = 64
 
-OUTPUT_DIR="output/ex05"
 logger = get_logger()
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
@@ -51,6 +50,9 @@ model.compile(optimizer = 'rmsprop',
 
 # fit
 history = model.fit(x=train_images, y=train_labels, epochs=EPOCHS, batch_size=BATCH_SIZE)
+
+# summary
+logger.info(model.summary())
 
 # test
 test_loss, test_acc, test_f1 = model.evaluate(x=test_images, y=test_labels)
