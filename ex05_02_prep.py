@@ -1,5 +1,6 @@
 import os, shutil
 from shared.logger import get_logger
+from shared.utility import ensure_directory
 import numpy as np
 
 logger = get_logger()
@@ -8,13 +9,6 @@ project = "dogs_cats"
 
 base_dir = os.path.join("data", project)
 original_data_dir = os.path.join(base_dir, "original", "train")
-
-def create_if_missing(path):
-    if not os.path.exists(path):
-        os.mkdir(path)
-        logger.info("created directory: {}".format(path))
-    else:
-        logger.info("directory already exists: {}".format(path))
 
 splits = {
     "train": range(1000),
@@ -25,10 +19,10 @@ img_types = ['cat', 'dog']
 
 for split, split_range in splits.items():
     dir_path = os.path.join(base_dir, split)
-    create_if_missing(dir_path)
+    ensure_directory(dir_path, logger)
     for itype in img_types:
         type_path = os.path.join(dir_path, itype)
-        create_if_missing(type_path)
+        ensure_directory(type_path, logger)
 
 splits = {
     "train": range(1000),

@@ -8,16 +8,16 @@ from shared.metrics import f1_score
 from shared.plot_history import plot_all
 from shared.utility import open_plot, ensure_directory
 
+logger = get_logger()
+
 OUTPUT_DIR="output/ae02"
-ensure_directory(OUTPUT_DIR)
+ensure_directory(OUTPUT_DIR, logger)
 ENCODING_DIM = 32
 ENCODING_SHAPE = (ENCODING_DIM,)
 INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
 EPOCHS = 50
 BATCH_SIZE = 256
-
-logger = get_logger()
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
