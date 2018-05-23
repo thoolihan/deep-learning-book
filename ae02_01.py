@@ -12,7 +12,7 @@ logger = get_logger()
 
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
-ENCODING_DIM = 32
+ENCODING_DIM = 36
 ENCODING_SHAPE = (ENCODING_DIM,)
 INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
@@ -56,18 +56,26 @@ decoded_imgs = decoder.predict(encoded_imgs)
 
 import matplotlib.pyplot as plt
 
-n = 10  # how many digits we will display
+DIGITS = 10  # how many digits we will display
+ROWS = 3
 plt.figure(figsize=(20, 4))
-for i in range(n):
+for i in range(DIGITS):
     # display original
-    ax = plt.subplot(2, n, i + 1)
+    ax = plt.subplot(ROWS, DIGITS, i + 1)
     plt.imshow(test_images[i].reshape(28, 28))
     plt.gray()
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
+    # display compressed
+    ax = plt.subplot(ROWS, DIGITS, i + 1 + DIGITS)
+    plt.imshow(encoded_imgs[i].reshape(6, 6))
+    plt.gray()
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
     # display reconstruction
-    ax = plt.subplot(2, n, i + 1 + n)
+    ax = plt.subplot(ROWS, DIGITS, i + 1 + (2 * DIGITS))
     plt.imshow(decoded_imgs[i].reshape(28, 28))
     plt.gray()
     ax.get_xaxis().set_visible(False)
