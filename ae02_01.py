@@ -7,6 +7,7 @@ from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
 from shared.utility import open_plot, ensure_directory
+import numpy as np
 
 logger = get_logger()
 
@@ -16,7 +17,7 @@ ENCODING_DIM = 36
 ENCODING_SHAPE = (ENCODING_DIM,)
 INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
-EPOCHS = 50
+EPOCHS = 25
 BATCH_SIZE = 256
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
@@ -69,7 +70,8 @@ for i in range(DIGITS):
 
     # display compressed
     ax = plt.subplot(ROWS, DIGITS, i + 1 + DIGITS)
-    plt.imshow(encoded_imgs[i].reshape(6, 6))
+    side_size = int(np.sqrt(ENCODING_DIM))
+    plt.imshow(encoded_imgs[i].reshape(side_size, side_size))
     plt.gray()
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
