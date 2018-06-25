@@ -82,6 +82,9 @@ for i in range(DIGITS):
     plt.gray()
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
+
+pname = "{}/{}-{}.png".format(OUTPUT_DIR, get_filename(), get_start_time())
+plt.savefig(pname)
+logger.info("Created {}".format(pname))
+
 plt.show()
-
-
