@@ -1,6 +1,9 @@
 import os
+from .logger import get_logger
 
-def ensure_directory(path, logger = None):
+logger = get_logger()
+
+def ensure_directory(path, logger = logger):
     if not os.path.exists(path):
         os.mkdir(path)
         if logger is not None:
@@ -10,8 +13,10 @@ def ensure_directory(path, logger = None):
             logger.info("Directory already exists: {}".format(path))
 
 
-def open_plot(plot_file):
+def open_plot(plot_file, logger = logger):
     if os.name == "posix":
         os_name = os.popen("uname -a").read()
         if "darwin" in os_name.lower():
             os.system("open {}".format(plot_file))
+            return plot_file
+    logger.info("open_plot only works on OS X")
