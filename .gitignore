@@ -3,3 +3,4 @@ data/*
 .ipynb_checkpoints
 output/**/*.csv
 output/**/*.png
+.idea/
