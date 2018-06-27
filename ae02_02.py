@@ -97,7 +97,4 @@ pname = "{}/{}-{}.png".format(OUTPUT_DIR, get_filename(), get_start_time())
 plt.savefig(pname)
 logger.info("Created {}".format(pname))
 
-plt.show()
-
-
-
+open_plot(pname)

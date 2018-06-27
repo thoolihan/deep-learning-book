@@ -45,12 +45,18 @@ decoder = models.Model(encoded_input, _decoded(encoded_input))
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 
 #fit
+logger.info("Fitting autoencoder...")
 autoencoder.fit(train_images,
                 train_images,
                 epochs=EPOCHS,
                 batch_size=BATCH_SIZE,
                 shuffle=True,
                 validation_data=(test_images, test_images))
+
+# look at summaries
+logger.debug("Encoder: {}\n".format(encoder.summary()))
+logger.debug("Dencoder: {}\n".format(decoder.summary()))
+logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 
 encoded_imgs = encoder.predict(test_images)
 decoded_imgs = decoder.predict(encoded_imgs)
