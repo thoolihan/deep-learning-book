@@ -46,7 +46,7 @@ autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 
 #fit
 logger.info("Fitting autoencoder...")
-autoencoder.fit(train_images,
+history = autoencoder.fit(train_images,
                 train_images,
                 epochs=EPOCHS,
                 batch_size=BATCH_SIZE,
@@ -57,6 +57,8 @@ autoencoder.fit(train_images,
 logger.debug("Encoder: {}\n".format(encoder.summary()))
 logger.debug("Dencoder: {}\n".format(decoder.summary()))
 logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
+
+logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
 
 encoded_imgs = encoder.predict(test_images)
 decoded_imgs = decoder.predict(encoded_imgs)
