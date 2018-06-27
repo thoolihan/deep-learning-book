@@ -8,12 +8,13 @@ from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
 from shared.utility import open_plot, ensure_directory
+import numpy as np
 
 logger = get_logger()
 
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
-ENCODING_DIM = 32
+ENCODING_DIM = 36
 ENCODING_SHAPE = (ENCODING_DIM,)
 INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
@@ -49,7 +50,7 @@ autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 
 #fit
 logger.info("Fitting autoencoder...")
-autoencoder.fit(train_images,
+history = autoencoder.fit(train_images,
                 train_images,
                 epochs=EPOCHS,
                 batch_size=BATCH_SIZE,
@@ -61,13 +62,15 @@ logger.debug("Encoder: {}\n".format(encoder.summary()))
 logger.debug("Dencoder: {}\n".format(decoder.summary()))
 logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 
+logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
+
 encoded_imgs = encoder.predict(test_images)
 decoded_imgs = decoder.predict(encoded_imgs)
 
 import matplotlib.pyplot as plt
 
 DIGITS = 10  # how many digits we will display
-ROWS = 2
+ROWS = 3
 plt.figure(figsize=(20, 4))
 for i in range(DIGITS):
     # display original
@@ -77,8 +80,16 @@ for i in range(DIGITS):
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
-    # display reconstruction
+    # display compressed
     ax = plt.subplot(ROWS, DIGITS, i + 1 + DIGITS)
+    side_size = int(np.sqrt(ENCODING_DIM))
+    plt.imshow(encoded_imgs[i].reshape(side_size, side_size))
+    plt.gray()
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+    # display reconstruction
+    ax = plt.subplot(ROWS, DIGITS, i + 1 + (2 * DIGITS))
     plt.imshow(decoded_imgs[i].reshape(28, 28))
     plt.gray()
     ax.get_xaxis().set_visible(False)
