@@ -43,9 +43,6 @@ autoencoder = models.Model(input_img, decoded)
 # encoder
 encoder = models.Model(input_img, encoded)
 
-# decoder
-encoded_input = layers.Input(shape = ENCODING_SHAPE)
-
 # build
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 

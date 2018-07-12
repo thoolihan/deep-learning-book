@@ -32,18 +32,13 @@ input_img = layers.Input(shape=INPUT_SHAPE)
 encoded = layers.Dense(ENCODING_DIM,
                        activation='relu',
                        activity_regularizer=regularizers.l1(ACTIVITY_REG))(input_img)
-_decoded = layers.Dense(INPUT_DIM, activation='sigmoid')
-decoded = _decoded(encoded)
+decoded = layers.Dense(INPUT_DIM, activation='sigmoid')(encoded)
 
 # whole autoencoder
 autoencoder = models.Model(input_img, decoded)
 
 # encoder
 encoder = models.Model(input_img, encoded)
-
-# decoder
-encoded_input = layers.Input(shape = ENCODING_SHAPE)
-decoder = models.Model(encoded_input, _decoded(encoded_input))
 
 # build
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
@@ -65,7 +60,7 @@ logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
 
 encoded_imgs = encoder.predict(test_images)
-decoded_imgs = decoder.predict(encoded_imgs)
+decoded_imgs = autoencoder.predict(test_images)
 
 import matplotlib.pyplot as plt
 
