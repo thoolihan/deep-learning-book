@@ -20,7 +20,7 @@ INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
 EPOCHS = 100
 BATCH_SIZE = 256
-ACTIVITY_REG = 10e-7
+ACTIVITY_REG = 10e-8
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
