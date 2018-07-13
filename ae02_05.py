@@ -16,10 +16,10 @@ logger = get_logger()
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
 ENCODING_SHAPE = (128,)
-EPOCHS = 1
+EPOCHS = 100
 BATCH_SIZE = 128
 ACTIVITY_REG = 10e-7
-TBLOGDIR='/tmp/autoencoder'
+TBLOGDIR="/tmp/autoencoder/{}".format(get_start_time())
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
@@ -62,6 +62,7 @@ logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 
 #fit
 logger.info("Fitting autoencoder...")
+logger.info("Tensorboard Directory is {}".format(TBLOGDIR))
 history = autoencoder.fit(train_images,
                 train_images,
                 epochs=EPOCHS,
