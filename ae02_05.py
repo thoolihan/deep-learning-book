@@ -27,6 +27,8 @@ TBLOGDIR="/tmp/autoencoder/{}".format(get_start_time())
 train_images = scale(add_channel(train_images))
 test_images = scale(add_channel(test_images))
 
+logger.info("training data shape: {}".format(train_images.shape))
+
 input_img = layers.Input(shape=train_images[0].shape)
 
 l1 = layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
