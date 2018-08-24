@@ -3,4 +3,7 @@ data/*
 .ipynb_checkpoints
 output/**/*.csv
 output/**/*.png
+output/gym
 .idea/
+.DS_Store
+__pycache__
