@@ -8,6 +8,7 @@ logger = get_logger()
 project = "dogs_cats"
 
 base_dir = os.path.join("data", project)
+ensure_directory(base_dir, logger)
 original_data_dir = os.path.join(base_dir, "original", "train")
 
 splits = {
