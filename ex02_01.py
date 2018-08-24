@@ -6,10 +6,11 @@ from shared.logger import get_logger, get_filename, get_start_time, get_curr_tim
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot
+from shared.utility import open_plot, ensure_directory
 
 OUTPUT_DIR="output/ex02"
 logger = get_logger()
+ensure_directory(OUTPUT_DIR, logger)
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
