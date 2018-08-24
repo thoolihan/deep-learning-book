@@ -1,7 +1,4 @@
 import matplotlib
-import matplotlib.pyplot as plt
-import os
-plt.style.use('ggplot')
 
 def has_display():
     if os.name == 'posix' and "DISPLAY" in os.environ:
@@ -11,6 +8,10 @@ def has_display():
 
 if not has_display():
     matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+import os
+plt.style.use('ggplot')
 
 def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
     loss = history.history[met_idx]
