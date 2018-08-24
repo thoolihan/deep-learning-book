@@ -1,5 +1,6 @@
 import os
 from .logger import get_logger
+from .plot_history import has_display
 
 logger = get_logger()
 
@@ -14,7 +15,7 @@ def ensure_directory(path, logger = logger):
 
 
 def open_plot(plot_file, logger = logger):
-    if os.name == "posix":
+    if has_display():
         os_name = os.popen("uname -a").read()
         if "darwin" in os_name.lower():
             os.system("open {}".format(plot_file))

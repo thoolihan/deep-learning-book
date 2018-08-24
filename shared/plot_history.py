@@ -1,5 +1,12 @@
 import matplotlib.pyplot as plt
+import os
 plt.style.use('ggplot')
+
+def has_display():
+    if os.name == 'posix' and "DISPLAY" in os.environ:
+        return True
+    else:
+        return False
 
 def plot_metric(history, ax, met_idx="loss", met_name="Loss"):
     loss = history.history[met_idx]
@@ -37,5 +44,6 @@ def plot_all(history_data, metrics = {'acc': 'Accuracy'}):
             plot_metric(history_data[fold], axn, idx, name)
     plt.tight_layout(1.)
     plt.legend()
-    combined.show()
+    if has_display():
+        combined.show()
     return combined
