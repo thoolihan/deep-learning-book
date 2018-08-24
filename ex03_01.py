@@ -8,6 +8,8 @@ import numpy as np
 from shared.logger import get_logger
 
 logger = get_logger()
+EPOCHS = 50
+BATCH_SIZE = 256
 NUMWORDS = 5000
 VALSIZE = 10000
 def vectorize_sequence(sequences, dimension=NUMWORDS):
@@ -38,7 +40,7 @@ model.compile(optimizer=optimizers.RMSprop(lr=.001),
 logger.info("Fitting Model")
 history = model.fit(x_train,
           y_train,
-          epochs=10,
-          batch_size=256,
+          epochs=EPOCHS,
+          batch_size=BATCH_SIZE,
           validation_split=0.3,
           shuffle=True)
