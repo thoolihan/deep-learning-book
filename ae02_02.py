@@ -18,7 +18,7 @@ ENCODING_DIM = 36
 ENCODING_SHAPE = (ENCODING_DIM,)
 INPUT_DIM = 784
 INPUT_SHAPE = (INPUT_DIM,)
-EPOCHS = 100
+EPOCHS = 25
 BATCH_SIZE = 256
 ACTIVITY_REG = 10e-7
 
@@ -54,13 +54,14 @@ history = autoencoder.fit(train_images,
 
 # look at summaries
 logger.debug("Encoder: {}\n".format(encoder.summary()))
-logger.debug("Dencoder: {}\n".format(decoder.summary()))
 logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 
 logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
 
 encoded_imgs = encoder.predict(test_images)
 decoded_imgs = autoencoder.predict(test_images)
+
+logger.info("encoded_imgs.mean() is {}".format(encoded_imgs.mean()))
 
 import matplotlib.pyplot as plt
 
