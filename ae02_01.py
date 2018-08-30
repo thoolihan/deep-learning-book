@@ -38,7 +38,6 @@ encoder = models.Model(input_img, encoded)
 
 # decoder
 encoded_input = layers.Input(shape = ENCODING_SHAPE)
-decoder = models.Model(encoded_input, _decoded(encoded_input))
 
 # build
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
@@ -54,13 +53,14 @@ history = autoencoder.fit(train_images,
 
 # look at summaries
 logger.debug("Encoder: {}\n".format(encoder.summary()))
-logger.debug("Dencoder: {}\n".format(decoder.summary()))
 logger.debug("Autoencoder: {}\n".format(autoencoder.summary()))
 
 logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
 
 encoded_imgs = encoder.predict(test_images)
 decoded_imgs = autoencoder.predict(test_images)
+
+logger.info("encoded_imgs.mean() is {}".format(encoded_imgs.mean()))
 
 import matplotlib.pyplot as plt
 
