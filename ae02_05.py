@@ -81,7 +81,7 @@ decoded_imgs = autoencoder.predict(test_images)
 import matplotlib.pyplot as plt
 
 DIGITS = 10  # how many digits we will display
-ROWS = 3
+ROWS = 2
 plt.figure(figsize=(20, 4))
 for i in range(DIGITS):
     # display original
