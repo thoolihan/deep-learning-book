@@ -1,8 +1,9 @@
 import matplotlib
 import os
+import platform
 
 def has_display():
-    if os.name == 'posix' and "DISPLAY" in os.environ:
+    if platform.system().lower() in ['darwin', 'windows', 'linux'] and "DISPLAY" in os.environ:
         return True
     else:
         return False

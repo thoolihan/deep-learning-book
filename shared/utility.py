@@ -1,4 +1,5 @@
 import os
+import platform
 from .logger import get_logger
 from .plot_history import has_display
 
@@ -16,8 +17,15 @@ def ensure_directory(path, logger = logger):
 
 def open_plot(plot_file, logger = logger):
     if has_display():
-        os_name = os.popen("uname -a").read()
-        if "darwin" in os_name.lower():
+        os_name = platform.system().lower()
+        if "darwin" in os_name:
             os.system("open {}".format(plot_file))
-            return plot_file
-    logger.info("open_plot only works on OS X")
+        elif "linux" in os_name:
+            os.system("xdg-open {}".format(plot_file))
+        elif "windows" in os_name:
+            os.system("start {}".format(plot_file))
+        else:
+            logger.info("unrecognized platform.system()")
+    else:
+        logger.info("no display to open plot with")
+    return plot_file
