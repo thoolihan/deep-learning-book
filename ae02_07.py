@@ -16,7 +16,7 @@ logger = get_logger()
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
 ENCODING_SHAPE = (128,)
-EPOCHS = 2
+EPOCHS = 100
 BATCH_SIZE = 128
 ACTIVITY_REG = 10e-7
 TBLOGDIR="/tmp/autoencoder/{}".format(get_start_time())
@@ -37,27 +37,20 @@ logger.info("training data shape: {}".format(train_images.shape))
 
 input_img = layers.Input(shape=train_images[0].shape)
 
-l1 = layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
-l1 = layers.MaxPooling2D((2, 2), padding='same')(l1)
+d1 = layers.Conv2D(32, (3, 3), activation='relu', padding='same')(input_img)
+d1 = layers.MaxPooling2D((2, 2), padding='same')(d1)
 
-l2 = layers.Conv2D(8, (3, 3), activation='relu', padding='same')(l1)
-l2 = layers.MaxPooling2D((2, 2), padding='same')(l2)
-
-
-l3 = layers.Conv2D(8, (3, 3), activation='relu', padding='same')(l2)
-encoded = layers.MaxPooling2D((2, 2), padding='same')(l3)
+d2 = layers.Conv2D(32, (3, 3), activation='relu', padding='same')(d1)
+encoded = layers.MaxPooling2D((2, 2), padding='same')(d2)
 
 
-l4 = layers.Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
-l4 = layers.UpSampling2D((2, 2))(l4)
+u1 = layers.Conv2D(32, (3, 3), activation='relu', padding='same')(encoded)
+u1 = layers.UpSampling2D((2, 2))(u1)
 
-l5 = layers.Conv2D(8, (3, 3), activation='relu', padding='same')(l4)
-l5 = layers.UpSampling2D((2, 2))(l5)
+u2 = layers.Conv2D(32, (3, 3), activation='relu', padding='same')(u1)
+u2 = layers.UpSampling2D((2, 2))(u2)
 
-l6 = layers.Conv2D(16, (3, 3), activation='sigmoid')(l5)
-l6 = layers.UpSampling2D((2, 2))(l6)
-
-decoded = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(l6)
+decoded = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(u2)
 
 # whole autoencoder
 autoencoder = models.Model(input_img, decoded)
@@ -101,7 +94,7 @@ for i in range(DIGITS):
 
     # display convolved version
     ax = plt.subplot(ROWS, DIGITS, i + 1 + DIGITS)
-    plt.imshow(encoded_imgs[i].reshape(4, 4 * 8).T)
+    plt.imshow(encoded_imgs[i].reshape(7, 7 * 32).T)
     plt.gray()
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
