@@ -48,7 +48,7 @@ l4 = layers.UpSampling2D((2, 2))(l4)
 l5 = layers.Conv2D(8, (3, 3), activation='relu', padding='same')(l4)
 l5 = layers.UpSampling2D((2, 2))(l5)
 
-l6 = layers.Conv2D(16, (3, 3), activation='sigmoid')(l5)
+l6 = layers.Conv2D(16, (3, 3), activation='relu')(l5)
 l6 = layers.UpSampling2D((2, 2))(l6)
 
 decoded = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(l6)
