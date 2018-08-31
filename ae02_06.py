@@ -16,7 +16,7 @@ logger = get_logger()
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
 ENCODING_SHAPE = (128,)
-EPOCHS = 5
+EPOCHS = 100
 BATCH_SIZE = 128
 ACTIVITY_REG = 10e-7
 TBLOGDIR="/tmp/autoencoder/{}".format(get_start_time())
@@ -55,6 +55,7 @@ decoded = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(l6)
 
 # whole autoencoder
 autoencoder = models.Model(input_img, decoded)
+encoder = models.Model(input_img, encoded)
 
 # build
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
@@ -76,6 +77,7 @@ history = autoencoder.fit(train_images,
 # look at summaries
 logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))
 
+encoded_imgs = encoder.predict(test_images)
 decoded_imgs = autoencoder.predict(test_images)
 
 import matplotlib.pyplot as plt
@@ -91,8 +93,16 @@ for i in range(DIGITS):
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
-    # display reconstruction
+    # display convolved version
     ax = plt.subplot(ROWS, DIGITS, i + 1 + DIGITS)
+    plt.imshow(encoded_imgs[i].reshape(4, 4 * 8).T)
+    plt.gray()
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+
+
+    # display reconstruction
+    ax = plt.subplot(ROWS, DIGITS, i + 1 + (2 * DIGITS))
     plt.imshow(decoded_imgs[i].reshape(28, 28))
     plt.gray()
     ax.get_xaxis().set_visible(False)
