@@ -17,7 +17,7 @@ ENCODING_SHAPE = (128,)
 EPOCHS = 100
 BATCH_SIZE = 128
 ACTIVITY_REG = 10e-7
-TBLOGDIR='/tmp/autoencoder'
+TBLOGDIR='/tmp/tensorboard'
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
