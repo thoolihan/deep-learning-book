@@ -19,7 +19,7 @@ ensure_directory(OUTPUT_DIR, logger)
 DRO = 0.25
 LR = 1e-4
 HLAYER = 64
-EPOCHS = 1
+EPOCHS = 50
 IMG_BATCH_SIZE=20
 BATCH_SIZE = 64
 img_shape = (150, 150, 3)
@@ -63,11 +63,10 @@ model.compile(loss='binary_crossentropy',
 
 history = model.fit_generator(
     train_generator,
-    steps_per_epoch=10,
+    steps_per_epoch=100,
     epochs=EPOCHS,
     validation_data=validation_generator,
     validation_steps=50,
     callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 model.save(os.path.join(OUTPUT_DIR, "model-{}.h5".format(get_start_time())))
-
