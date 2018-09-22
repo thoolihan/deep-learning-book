@@ -16,7 +16,6 @@ INPUT_DIR="data/{}".format(PROJECT_NAME)
 OUTPUT_DIR="output/{}".format(PROJECT_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 DRO = 0.25
-L2R = 0.0001
 HLAYER = 64
 EPOCHS = 5
 BATCH_SIZE = 64
