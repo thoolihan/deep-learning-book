@@ -22,7 +22,7 @@ for split, split_range in splits.items():
     dir_path = os.path.join(base_dir, split)
     ensure_directory(dir_path, logger)
     for itype in img_types:
-        type_path = os.path.join(dir_path, itype)
+        type_path = os.path.join(dir_path, "{}s".format(itype))
         ensure_directory(type_path, logger)
 
 splits = {
@@ -33,12 +33,16 @@ splits = {
 
 for itype in img_types:
     for split, split_range in splits.items():
+        missing = 0
         fnames = ['{}.{}.jpg'.format(itype, i) for i in split_range]
         for fname in fnames:
             src = os.path.join(original_data_dir, fname)
-            dst = os.path.join(base_dir, split, itype)
+            dst = os.path.join(base_dir, split, "{}s".format(itype), fname)
             if not os.path.exists(dst):
                 shutil.copyfile(src, dst)
+                missing += 1
+                if missing % 50 == 0:
+                    logger.info("created {} files".format(missing))
         logger.info("copied {itype}.{imin}.jpg - {itype}.{imax}.jpg to {dest}".format(
             itype = itype, imin = np.min(split_range), imax = np.max(split_range), dest = os.path.join(dir_path, split)
         ))
