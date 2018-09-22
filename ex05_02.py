@@ -5,7 +5,7 @@ from shared.logger import get_logger, get_filename, get_start_time, get_curr_tim
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot, ensure_directory
+from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, get_model_file
 import os
 
 logger = get_logger()
@@ -14,15 +14,18 @@ logger = get_logger()
 PROJECT_NAME="dogs_cats"
 INPUT_DIR="data/{}".format(PROJECT_NAME)
 OUTPUT_DIR="output/{}".format(PROJECT_NAME)
-TBLOGDIR='/tmp/tensorboard'
 ensure_directory(OUTPUT_DIR, logger)
+MODEL_FILE = get_model_file(OUTPUT_DIR)
+TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
+
 DRO = 0.25
 LR = 1e-4
 HLAYER = 64
-EPOCHS = 50
+EPOCHS = 30
 IMG_BATCH_SIZE=20
 BATCH_SIZE = 64
 img_shape = (150, 150, 3)
+SAVE_MODEL = False
 train_dir = "{}/train".format(INPUT_DIR)
 validation_dir = "{}/validation".format(INPUT_DIR)
 
@@ -69,4 +72,8 @@ history = model.fit_generator(
     validation_steps=50,
     callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
-model.save(os.path.join(OUTPUT_DIR, "model-{}.h5".format(get_start_time())))
+if SAVE_MODEL:
+    model.save(MODEL_FILE)
+    logger.info("model saved at: {}".format(MODEL_FILE))
+else:
+    logger.info("did NOT save {}, change flag if you meant to".format(MODEL_FILE))

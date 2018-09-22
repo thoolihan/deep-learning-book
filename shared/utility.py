@@ -1,8 +1,9 @@
 import os
 import platform
-from .logger import get_logger
+from .logger import get_logger, get_start_time
 from .plot_history import has_display
 
+TENSORBOARD_DIR='/tmp/tensorboard'
 logger = get_logger()
 
 def ensure_directory(path, logger = logger):
@@ -29,3 +30,10 @@ def open_plot(plot_file, logger = logger):
     else:
         logger.info("no display to open plot with")
     return plot_file
+
+def get_tensorboard_directory(project_name, start_time=get_start_time(), tensorboard_dir=TENSORBOARD_DIR):
+    return os.path.join(tensorboard_dir, "{}-{}".format(project_name, start_time))
+
+def get_model_file(output_dir):
+    return os.path.join(output_dir, "model-{}.h5".format(get_start_time()))
+        
