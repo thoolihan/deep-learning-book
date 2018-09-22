@@ -3,6 +3,7 @@ data/*
 .ipynb_checkpoints
 output/**/*.csv
 output/**/*.png
+output/**/*.h5
 output/gym
 .idea/
 .DS_Store

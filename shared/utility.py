@@ -1,6 +1,6 @@
 import os
 import platform
-from .logger import get_logger, get_start_time
+from .logger import get_logger, get_start_time, get_filename
 from .plot_history import has_display
 
 TENSORBOARD_DIR='/tmp/tensorboard'
@@ -34,6 +34,6 @@ def open_plot(plot_file, logger = logger):
 def get_tensorboard_directory(project_name, start_time=get_start_time(), tensorboard_dir=TENSORBOARD_DIR):
     return os.path.join(tensorboard_dir, "{}-{}".format(project_name, start_time))
 
-def get_model_file(output_dir):
-    return os.path.join(output_dir, "model-{}.h5".format(get_start_time()))
+def get_model_file(output_dir, fname=get_filename(), ts=get_start_time()):
+    return os.path.join(output_dir, "model-{}-{}.h5".format(fname, ts))
         
