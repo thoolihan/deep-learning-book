@@ -2,9 +2,7 @@ from keras import models, layers, optimizers
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import TensorBoard
 from shared.logger import get_logger, get_filename, get_start_time, get_curr_time
-from shared.transform import flatten, scale
 from shared.metrics import f1_score
-from shared.plot_history import plot_all
 from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, get_model_file
 import os
 
@@ -23,7 +21,6 @@ LR = 1e-4
 HLAYER = 64
 EPOCHS = 30
 IMG_BATCH_SIZE=20
-BATCH_SIZE = 64
 img_shape = (150, 150, 3)
 SAVE_MODEL = False
 train_dir = "{}/train".format(INPUT_DIR)

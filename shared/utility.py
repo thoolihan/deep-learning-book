@@ -3,7 +3,7 @@ import platform
 from .logger import get_logger, get_start_time, get_filename
 from .plot_history import has_display
 
-TENSORBOARD_DIR='/tmp/tensorboard'
+TENSORBOARD_DIR=os.path.join('/tmp', 'tensorboard')
 logger = get_logger()
 
 def ensure_directory(path, logger = logger):
