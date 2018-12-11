@@ -1,4 +1,4 @@
-from keras.applications import VGG16
+from tensorflow.keras.applications import VGG16
 
 conv_base = VGG16(weights='imagenet',
                   include_top=False,
