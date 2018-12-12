@@ -67,7 +67,7 @@ test_features, test_labels = extract_features(test_dir, TEST_SIZE)
 
 logger.info("Reshaping Tensors (flatten extracted output)...")
 train_features = np.reshape(train_features, (TRAIN_SIZE, VGG_FLAT))
-val_features = np.reshape(val_features, (VAL_SIZE, VGG_FLAT))
+validation_features = np.reshape(validation_features, (VAL_SIZE, VGG_FLAT))
 test_features = np.reshape(test_features, (TEST_SIZE, VGG_FLAT))
 
 logger.info("Creating NN...")
