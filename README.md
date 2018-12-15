@@ -12,7 +12,7 @@ François Chollet can be found at:
 cd ops
 terraform plan
 terraform apply
-post-terraform.sh
+./post-terraform.sh
 ```
 
 If all goes well, to work with the server, do the following:
