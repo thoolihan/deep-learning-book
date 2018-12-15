@@ -7,6 +7,24 @@ François Chollet can be found at:
 * [@fchollet on github](https://github.com/fchollet)
 * [google research](https://research.google.com/pubs/105096.html)
 
+# Running on EC2
+```
+cd ops
+terraform plan
+terraform apply
+post-terraform.sh
+```
+
+If all goes well, to work with the server, do the following:
+* ssh aws-gpu (with 6006 and 8888 forwarded)
+* tmux
+* create a window for jupyter server
+    * source activate dlb
+    * jupyter lab
+* create a window for tensorboard
+    * source activate dlb
+    * tensorboard --logdir /tmp/tensorboard
+
 
 ### Questions/Contact
 [Tim Hoolihan](https://github.com/thoolihan)
