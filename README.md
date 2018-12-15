@@ -16,6 +16,7 @@ post-terraform.sh
 ```
 
 If all goes well, to work with the server, do the following:
+
 * ssh aws-gpu (with 6006 and 8888 forwarded)
 * tmux
 * create a window for jupyter server
