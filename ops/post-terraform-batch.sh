@@ -14,7 +14,7 @@ kaggle competitions download -c titanic -p data/titanic/
 kaggle competitions download -c dogs-vs-cats -p data/dogs_cats/original/
 
 cd data/dogs_cats/original/
-unzip train -d train
-unzip test -d test
+unzip train
+unzip test1
 cd ../../../
 python ex05_02_prep.py
