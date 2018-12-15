@@ -1,0 +1,11 @@
+name: dlb
+dependencies:
+  - python=3.6
+  - numpy
+  - tensorflow-gpu
+  - keras
+  - matplotlib
+  - jupyter
+  - pandas
+  - tensorboard
+  - h5py
