@@ -9,3 +9,4 @@ dependencies:
   - pandas
   - tensorboard
   - h5py
+  - pillow

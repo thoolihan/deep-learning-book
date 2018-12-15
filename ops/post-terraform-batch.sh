@@ -9,8 +9,10 @@ cd dlbook
 conda env create -f environment.yml
 source activate dlb
 
+pip install kaggle
 kaggle competitions download -c titanic -p data/titanic/
 kaggle competitions download -c dogs-vs-cats -p data/dogs_cats/original/
+
 cd data/dogs_cats/original/
 unzip train -d train
 unzip test -d test
