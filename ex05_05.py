@@ -1,3 +1,6 @@
+### This version uses the convolutional base on the data once, and the result is the new featureset
+### that will be run through a network multiple times
+
 import os
 import numpy as np
 from functools import reduce
