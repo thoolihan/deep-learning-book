@@ -1,3 +1,5 @@
+### This version uses the conv base (frozen) as a part of each run, and augments the image data first
+
 import os
 import numpy as np
 from functools import reduce
@@ -20,21 +22,39 @@ MODEL_FILE = get_model_file(OUTPUT_DIR)
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
-DRO = 0.5
 LR = 2e-5
 HLAYER = 256
 EPOCHS = 30
 IMG_BATCH_SIZE=20
-TRAIN_SIZE = 2000
-VAL_SIZE = 1000
-TEST_SIZE = 1000
-VGG_SHAPE = (4, 4, 512)
-VGG_FLAT = reduce(lambda x, y: x * y, VGG_SHAPE)
 SAVE_MODEL = False
 
 train_dir = os.path.join(INPUT_DIR, "train")
 validation_dir = os.path.join(INPUT_DIR, "validation")
 test_dir = os.path.join(INPUT_DIR, "test")
+
+# load data
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=40,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest')
+val_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(150, 150),
+    batch_size=IMG_BATCH_SIZE,
+    class_mode='binary')
+
+validation_generator = val_datagen.flow_from_directory(
+    validation_dir,
+    target_size=(150, 150),
+    batch_size=IMG_BATCH_SIZE,
+    class_mode='binary')
 
 conv_base = VGG16(weights='imagenet',
                   include_top=False,
@@ -48,23 +68,21 @@ model.add(layers.Dense(1, activation='sigmoid'))
 
 model.summary()
 
-logger.debug("early exit, to be removed later...")
-quit()
+logger.info("Trainable weights before freeze: {}".format(len(model.trainable_weights)))
+conv_base.trainable = False
+logger.info("Trainable weights after freeze: {}".format(len(model.trainable_weights)))
 
-
-
-
-
-model.compile(optimizer=optimizers.RMSprop(LR),
+model.compile(optimizer=optimizers.RMSprop(lr=LR),
               loss='binary_crossentropy',
               metrics=['acc', f1_score])
 
 logger.info("Fitting network...")
-history = model.fit(train_features, train_labels,
-                    epochs=EPOCHS,
-                    batch_size=IMG_BATCH_SIZE,
-                    validation_data=(validation_features, validation_labels),
-                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+history = model.fit_generator(train_generator,
+                              steps_per_epoch=int(train_generator.n / IMG_BATCH_SIZE),
+                              epochs=EPOCHS,
+                              validation_data=validation_generator,
+                              validation_steps=int(validation_generator.n / IMG_BATCH_SIZE),
+                              callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 if SAVE_MODEL:
     model.save(MODEL_FILE)
