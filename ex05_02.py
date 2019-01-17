@@ -1,3 +1,5 @@
+### From scratch CNN on dog and cat pics, overfits
+
 from keras import models, layers, optimizers
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import TensorBoard
