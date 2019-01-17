@@ -66,11 +66,11 @@ model.add(layers.Flatten())
 model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
-model.summary()
-
 logger.info("Trainable weights before freeze: {}".format(len(model.trainable_weights)))
 conv_base.trainable = False
 logger.info("Trainable weights after freeze: {}".format(len(model.trainable_weights)))
+
+model.summary()
 
 model.compile(optimizer=optimizers.RMSprop(lr=LR),
               loss='binary_crossentropy',
