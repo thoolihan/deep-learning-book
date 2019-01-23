@@ -4,6 +4,7 @@ import os
 import numpy as np
 from functools import reduce
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras.applications.imagenet_utils import preprocess_input
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras import models, layers, optimizers
 from tensorflow.keras.callbacks import TensorBoard
@@ -34,7 +35,7 @@ test_dir = os.path.join(INPUT_DIR, "test")
 
 # load data
 train_datagen = ImageDataGenerator(
-    rescale=1./255,
+    preprocessing_function=preprocess_input,
     rotation_range=40,
     width_shift_range=0.2,
     height_shift_range=0.2,
@@ -42,13 +43,14 @@ train_datagen = ImageDataGenerator(
     zoom_range=0.2,
     horizontal_flip=True,
     fill_mode='nearest')
-val_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(
     train_dir,
     target_size=(150, 150),
     batch_size=IMG_BATCH_SIZE,
     class_mode='binary')
+
+val_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 validation_generator = val_datagen.flow_from_directory(
     validation_dir,
