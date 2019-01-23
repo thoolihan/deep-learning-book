@@ -29,7 +29,7 @@ HLAYER = 256
 EPOCHS = 30
 EPOCHS_FINETUNE = 100
 IMG_BATCH_SIZE=20
-SAVE_MODEL = False
+SAVE_MODEL = True
 
 train_dir = os.path.join(INPUT_DIR, "train")
 validation_dir = os.path.join(INPUT_DIR, "validation")
