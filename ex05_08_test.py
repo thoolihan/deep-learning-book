@@ -1,5 +1,4 @@
-### This version takes 5_06, and after training, unfreezes the 
-### last layer in the conv_base in order to fine-tune
+### This version hydrates 5_07, uses it on the test set
 
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
