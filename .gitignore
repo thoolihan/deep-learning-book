@@ -9,3 +9,5 @@ output/gym
 .DS_Store
 __pycache__
 .#*
+.terraform
+
