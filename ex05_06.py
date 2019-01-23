@@ -26,7 +26,7 @@ logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 LR = 2e-5
 HLAYER = 256
 EPOCHS = 30
-IMG_BATCH_SIZE=20
+IMG_BATCH_SIZE=30
 SAVE_MODEL = False
 
 train_dir = os.path.join(INPUT_DIR, "train")
