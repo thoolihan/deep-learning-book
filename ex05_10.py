@@ -25,3 +25,4 @@ img_tensor /= 255.
 print(img_tensor.shape)
 plt.imshow(img_tensor[0])
 plt.show()
+
