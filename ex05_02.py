@@ -27,7 +27,7 @@ EPOCHS = 30
 IMG_BATCH_SIZE=20
 BATCH_SIZE = 64
 img_shape = (150, 150, 3)
-SAVE_MODEL = False
+SAVE_MODEL = True
 train_dir = "{}/train".format(INPUT_DIR)
 validation_dir = "{}/validation".format(INPUT_DIR)
 
