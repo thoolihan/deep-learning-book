@@ -1,12 +1,13 @@
-from keras.datasets import mnist
-from keras import models
-from keras import layers
-from keras.utils import to_categorical
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras import models
+from tensorflow.keras import layers
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.callbacks import TensorBoard
 from shared.logger import get_logger, get_filename, get_start_time, get_curr_time
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot, ensure_directory
+from shared.utility import open_plot, ensure_directory, get_tensorboard_directory
 
 logger = get_logger()
 
@@ -19,6 +20,8 @@ DRO = 0.25
 HLAYER = 64
 EPOCHS = 5
 BATCH_SIZE = 64
+TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
+logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
@@ -49,7 +52,11 @@ model.compile(optimizer = 'rmsprop',
                metrics = ['accuracy', f1_score])
 
 # fit
-history = model.fit(x=train_images, y=train_labels, epochs=EPOCHS, batch_size=BATCH_SIZE)
+history = model.fit(x=train_images, 
+                    y=train_labels, 
+                    epochs=EPOCHS, 
+                    batch_size=BATCH_SIZE,
+                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 # summary
 logger.info(model.summary())
