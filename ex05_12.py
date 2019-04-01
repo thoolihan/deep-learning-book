@@ -10,6 +10,7 @@ from tensorflow.keras.callbacks import TensorBoard
 from shared.logger import get_logger, get_filename, get_start_time, get_curr_time
 from shared.metrics import f1_score
 from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, get_model_file
+import cv2
 import matplotlib
 
 logger = get_logger()
@@ -25,7 +26,7 @@ MODEL_FILE = get_model_file(OUTPUT_DIR)
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
-animal_img = "elephants"
+animal_img = "elephant_dirt" #"elephants"
 img_path = '{}/{}.jpg'.format(INPUT_DIR, animal_img)
 img = image.load_img(img_path, target_size=(224, 224))
 
@@ -57,3 +58,12 @@ heatmap /= np.max(heatmap)
 heatmap_file = "{}/{}-heatmap.jpg".format(OUTPUT_DIR, animal_img)
 matplotlib.image.imsave(heatmap_file, heatmap)
 logger.info("Wrote {}".format(heatmap_file))
+
+img = cv2.imread(img_path)
+heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
+heatmap = np.uint8(255 * heatmap)
+heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+superimposed_img = heatmap * 0.4 + img
+superimposed_file = "{}/{}_superimposed.jpg".format(OUTPUT_DIR, animal_img)
+cv2.imwrite(superimposed_file, superimposed_img)
+logger.info("Wrote {}".format(superimposed_file))
