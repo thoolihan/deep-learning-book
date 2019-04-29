@@ -3,6 +3,7 @@ data/*
 .ipynb_checkpoints
 output/**/*.csv
 output/**/*.png
+output/**/*.jpg
 output/**/*.h5
 output/gym
 .idea/
