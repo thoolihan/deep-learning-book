@@ -4,8 +4,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+from shared.logger import get_logger, get_filename, get_start_time, get_curr_time
+
+logger = get_logger()
 
 torch.manual_seed(1)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+logger.info("Device: ".format(device))
 
 PLAYERS = 3
 GRID_SHAPE = [4, 5]
@@ -13,16 +18,16 @@ STATE_SHAPE = GRID_SHAPE + [3]
 
 print("creating players")
 pid = range(PLAYERS)
-player_v = torch.tensor(pid)
+player_v = torch.tensor(pid).to(device)
 print(player_v)
 
 print("\ncreating grid")
-grid_m = torch.randn(GRID_SHAPE)
+grid_m = torch.randn(GRID_SHAPE).to(device)
 print(grid_m)
 
 print("\ncreating state")
 states = np.zeros(STATE_SHAPE)
-states_t = torch.tensor(states)
+states_t = torch.tensor(states).to(device)
 print(states_t)
 
 
