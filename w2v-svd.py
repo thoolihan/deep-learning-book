@@ -13,6 +13,10 @@ DIMENSIONS = 100
 EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
 UPDATE_INDEX = 100000
+PLOT_FILE = "w2v-svd.png"
+PROJECT_NAME="w2v"
+OUTPUT_DIR="output/{}".format(PROJECT_NAME)
+PLOT_PATH = os.path.join(OUTPUT_DIR, PLOT_FILE)
 
 embeddings = {}
 embeddings_file = open(EMBEDDINGS_PATH, mode="rt", encoding="utf-8")
@@ -54,4 +58,6 @@ logger.info(df)
 plt.scatter(df.x, df.y)
 for word, row in df.iterrows():
     plt.text(row.x, row.y, word)
+logger.info("saving plot as: {}".format(PLOT_PATH))
+plt.savefig(PLOT_PATH)  
 plt.show()
