@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from shared.logger import get_logger
+from shared.utility import open_plot
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
@@ -47,5 +48,5 @@ plt.scatter(df.x, df.y)
 for word, row in df.iterrows():
     plt.text(row.x, row.y, word)
 logger.info("saving plot as: {}".format(PLOT_PATH))
-plt.savefig(PLOT_PATH)      
-plt.show()
+plt.savefig(PLOT_PATH)
+open_plot(PLOT_PATH)

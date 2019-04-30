@@ -24,7 +24,7 @@ def open_plot(plot_file, logger = logger):
         if "darwin" in os_name:
             os.system("open {}".format(plot_file))
         elif "linux" in os_name:
-            os.system("xdg-open {}".format(plot_file))
+            os.system("gio open {}".format(plot_file))
         elif "windows" in os_name:
             os.system("start {}".format(plot_file))
         else:
@@ -38,7 +38,7 @@ def get_tensorboard_directory(project_name, start_time=get_start_time(), fname=g
 
 def get_model_file(output_dir, fname=get_filename(), ts=get_start_time()):
     return os.path.join(output_dir, "model-{}-{}.h5".format(fname, ts))
-        
+
 def limit_gpu_memory(frac=0.75):
     config = tf.ConfigProto()
     config.gpu_options.per_process_gpu_memory_fraction = frac
