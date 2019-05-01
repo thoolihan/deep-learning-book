@@ -8,4 +8,5 @@ def f1_score(y_true, y_pred):
     true_positive = K.sum(y_true * equal)
     precision = true_positive / predicted_true
     recall = true_positive / actual_true
-    return 2 * (precision * recall) / (precision + recall)
+    epsilon = .0000000001
+    return 2 * (precision * recall) / ((precision + recall) + epsilon)
