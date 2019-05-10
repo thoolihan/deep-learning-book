@@ -99,3 +99,9 @@ for word, i in word_index.items():
             embedding_matrix[i] = embedding_vector
         
 logger.info("Defining Model")
+model = Sequential()
+model.add(Embedding(NUM_WORDS, EMBEDDINGS_DIMENSIONS, input_length = MAX_LEN))
+model.add(Flatten())
+model.add(Dense(32, activation = 'relu'))
+model.add(Dense(1, activation = 'sigmoid'))
+model.summary()
