@@ -17,6 +17,10 @@ logger = get_logger()
 PROJECT_NAME="imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
+GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
+EMBEDDINGS_DIMENSIONS = 100
+EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
+EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 30
@@ -24,6 +28,7 @@ BATCH_SIZE=64
 NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
+VAL_SIZE = 10000
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
@@ -57,4 +62,27 @@ labels = np.asarray(labels)
 logger.info('Shape of data tensor: {}'.format(data.shape))
 logger.info('Shape of label tensor: {}'.format(labels.shape))
 
+#shuffle records
+indices = np.arange(data.shape[0])
+np.random.shuffle(indices)
+data = data[indices]
+labels = labels[indices]
 
+x_train = data[:TRAIN_SIZE]
+y_train = labels[:TRAIN_SIZE]
+x_val = data[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
+y_val = labels[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
+
+embeddings_index = {}
+i = 0
+with open(EMBEDDINGS_PATH) as fh:
+    for line in fh:
+        values = line.split()
+        word = values[0]
+        coefs = np.asarray(values[1:], dtype='float32')
+        embeddings_index[word] = coefs
+        if i % 100000 == 0:
+            logger.info("loaded {} embeddings...".format(i))
+        i += 1
+        
+logger.info('Found {} word vectors'.format(len(embeddings_index)))
