@@ -50,3 +50,11 @@ sequences = tkn.texts_to_sequences(texts)
 
 word_index = tkn.word_index
 logger.info("Found {} unique tokens".format(len(word_index)))
+
+data = pad_sequences(sequences, maxlen=MAX_LEN)
+
+labels = np.asarray(labels)
+logger.info('Shape of data tensor: {}'.format(data.shape))
+logger.info('Shape of label tensor: {}'.format(labels.shape))
+
+
