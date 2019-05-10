@@ -30,7 +30,7 @@ MAX_LEN = 100
 TRAIN_SIZE = 200
 VAL_SIZE = 10000
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
-SAVE_MODEL=True
+SAVE_MODEL=False
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
@@ -74,30 +74,6 @@ x_train = data[:TRAIN_SIZE]
 y_train = labels[:TRAIN_SIZE]
 x_val = data[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
 y_val = labels[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
-
-logger.info("Loading Embeddings...")
-logger.info("Embeddings File: {}".format(EMBEDDINGS_PATH))
-embeddings_index = {}
-i = 0
-with open(EMBEDDINGS_PATH) as fh:
-    for line in fh:
-        values = line.split()
-        word = values[0]
-        coefs = np.asarray(values[1:], dtype='float32')
-        embeddings_index[word] = coefs
-        if i % 100000 == 0:
-            logger.info("loaded {} embeddings...".format(i))
-        i += 1
-        
-logger.info('Found {} word vectors'.format(len(embeddings_index)))
-
-logger.info("Converting tokerizer index to embeddings matrix")
-embedding_matrix = np.zeros((NUM_WORDS, EMBEDDINGS_DIMENSIONS))
-for word, i in word_index.items():
-    if i < NUM_WORDS:
-        embedding_vector = embeddings_index.get(word)
-        if embedding_vector is not None:
-            embedding_matrix[i] = embedding_vector
         
 logger.info("Defining Model")
 model = Sequential()
@@ -106,10 +82,6 @@ model.add(Flatten())
 model.add(Dense(32, activation = 'relu'))
 model.add(Dense(1, activation = 'sigmoid'))
 model.summary()
-
-logger.info("Loading embeddings matrix into first model layer (Embedding Layer)")
-model.layers[0].set_weights([embedding_matrix])
-model.layers[0].trainable = False
 
 logger.info("Fitting model...")
 model.compile(optimizer='rmsprop',

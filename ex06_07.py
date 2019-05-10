@@ -1,3 +1,5 @@
+#Infer model on test set
+
 import os
 import numpy as np
 from tensorflow.keras.layers import Embedding
@@ -126,3 +128,25 @@ if SAVE_MODEL:
     logger.info("model weights saved at: {}".format(MODEL_FILE))
 else:
     logger.info("did NOT save model weights at {}, change flag if you meant to".format(MODEL_FILE))
+    
+logger.info("Load Test Data")  
+labels = []
+texts = []
+for label_type in ['neg', 'pos']:
+    dir_name = os.path.join(TRAIN_DIR, label_type)
+    for fname in os.listdir(dir_name):
+        if fname[-4:] == '.txt':
+            with open(os.path.join(dir_name, fname)) as f:
+                texts.append(f.read())
+                if label_type == 'neg':
+                    labels.append(0)
+                else:
+                    labels.append(1)
+
+logger.info("Tokenize Text Data")                    
+sequences = tkn.texts_to_sequences(texts)
+x_test = pad_sequences(sequences, maxlen=MAX_LEN)
+y_test = np.asarray(labels)
+
+logger.info("Evaluate test set")
+model.evaluate(x_test, y_test)
