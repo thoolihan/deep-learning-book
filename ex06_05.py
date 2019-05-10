@@ -23,13 +23,14 @@ EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
-EPOCHS = 30
-BATCH_SIZE=64
+EPOCHS = 10
+BATCH_SIZE=32
 NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
 VAL_SIZE = 10000
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
+SAVE_MODEL=False
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
@@ -105,3 +106,23 @@ model.add(Flatten())
 model.add(Dense(32, activation = 'relu'))
 model.add(Dense(1, activation = 'sigmoid'))
 model.summary()
+
+logger.info("Loading embeddings matrix into first model layer (Embedding Layer)")
+model.layers[0].set_weights([embedding_matrix])
+model.layers[0].trainable = False
+
+logger.info("Fitting model...")
+model.compile(optimizer='rmsprop',
+              loss='binary_crossentropy',
+              metrics=['acc', f1_score])
+history = model.fit(x_train, y_train,
+                   epochs=EPOCHS,
+                   batch_size=BATCH_SIZE,
+                   validation_data=(x_val, y_val),
+                   callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+
+if SAVE_MODEL:
+    model.save_weights(MODEL_FILE)
+    logger.info("model weights saved at: {}".format(MODEL_FILE))
+else:
+    logger.info("did NOT save model weights at {}, change flag if you meant to".format(MODEL_FILE))
