@@ -1,12 +1,16 @@
 import keras.backend as K
 
 def f1_score(y_true, y_pred):
-    y_pred = K.round(y_pred)
-    actual_true = K.sum(K.cast(K.greater(y_true, 0), K.floatx()))
-    predicted_true = K.sum(K.cast(K.greater(y_pred, 0), K.floatx()))
-    equal = K.cast(K.equal(y_true, y_pred), K.floatx())
-    true_positive = K.sum(y_true * equal)
-    precision = true_positive / predicted_true
-    recall = true_positive / actual_true
-    epsilon = .0000000001
-    return 2 * (precision * recall) / ((precision + recall) + epsilon)
+    return f_score(y_true, y_pred, beta = 2)
+
+def f_score(y_true, y_pred, beta = 2):
+    y_true = K.round(K.clip(y_true, 0, 1))
+    y_pred = K.round(K.clip(y_pred, 0, 1))
+    
+    actual_true = K.sum(y_true)
+    predicted_true = K.sum(y_pred)
+    
+    true_positive = K.sum(y_true * y_pred)
+    precision = true_positive / (predicted_true + K.epsilon())
+    recall = true_positive / (actual_true + K.epsilon())
+    return beta * (precision * recall) / (precision + recall + K.epsilon())
