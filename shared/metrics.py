@@ -1,5 +1,4 @@
 import keras.backend as K
-import tensorflow as tf
 
 def f1_score(y_true, y_pred):
     return fbeta_score(y_true, y_pred, beta = 1)
@@ -17,4 +16,4 @@ def fbeta_score(y_true, y_pred, beta):
     beta_sq = beta ** 2
     denom = beta_sq * precision + recall
     
-    return ((1 + beta_sq) * precision * recall) / denom
+    return K.mean(((1 + beta_sq) * precision * recall) / denom)
