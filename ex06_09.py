@@ -2,6 +2,7 @@ import os
 import tensorflow as tf
 import numpy as np
 from scipy import stats
+from sklearn import metrics
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import SimpleRNN, Embedding, Flatten, Dense
@@ -60,6 +61,9 @@ history = model.fit(input_train,
                    batch_size=BATCH_SIZE,
                    validation_split=0.2,
                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+
+logger.info("Running model.evaluate on test set...")
+model.evaluate(input_test, y_test)
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
