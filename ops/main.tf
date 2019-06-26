@@ -11,7 +11,7 @@ resource "aws_instance" "mlbox" {
         vpc_security_group_ids = ["${var.backend_sg}"]
         subnet_id = "${var.backend_sn}"
 
-        tags {
+        tags = {
              Name = "${var.project}GPU"
              Terraform = "true"
              Project = "${var.project}"
@@ -22,7 +22,7 @@ resource "aws_eip" "default" {
   instance = "${aws_instance.mlbox.id}"
   vpc      = true
 
-  tags {
+  tags = {
        Name = "${var.project}EIP"
        Terraform = "true"
        Project = "${var.project}"
