@@ -12,5 +12,6 @@ cleanmodels:
 cleancharts:
 	rm -fv output/**/*.png
 
-requirements-gpu.txt:
-	sed "s/tensorflow=/tensorflow-gpu=/g" requirements.txt > requirements-gpu.txt
+requirements-gpu.txt: requirements.txt
+	echo "### DO NOT EDIT: GENERATE WITH 'make requirements-gpu.txt' ###" > requirements-gpu.txt
+	sed "s/tensorflow=/tensorflow-gpu=/g" requirements.txt >> requirements-gpu.txt
