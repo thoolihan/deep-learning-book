@@ -3,7 +3,7 @@ import platform
 from .logger import get_logger, get_start_time, get_filename
 from .plot_history import has_display
 import tensorflow as tf
-from tensorflow.keras.backend import set_session
+from tensorflow.compat.v1.keras.backend import set_session
 
 TENSORBOARD_DIR=os.path.join('/tmp', 'tensorboard')
 logger = get_logger()
