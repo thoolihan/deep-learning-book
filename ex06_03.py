@@ -1,6 +1,7 @@
 from keras.preprocessing.text import Tokenizer
 from shared.logger import get_logger
 import numpy as np
+from pprint import pprint
 
 logger = get_logger()
 
@@ -16,3 +17,4 @@ for i, sample in enumerate(samples):
         results[i, j, index] = 1.
         
 logger.info("results.shape: {}".format(results.shape))
+pprint(results)
