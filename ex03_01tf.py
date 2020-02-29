@@ -6,7 +6,9 @@ from tensorflow.keras import losses
 from tensorflow.keras import metrics
 import numpy as np
 from shared.logger import get_logger
+from shared.utility import limit_gpu_memory
 
+limit_gpu_memory()
 logger = get_logger()
 EPOCHS = 5
 BATCH_SIZE = 256

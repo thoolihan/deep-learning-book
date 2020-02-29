@@ -5,7 +5,7 @@ from .plot_history import has_display
 import tensorflow as tf
 from tensorflow.compat.v1.keras.backend import set_session
 
-TENSORBOARD_DIR=os.path.join('/tmp', 'tensorboard')
+TENSORBOARD_DIR=os.path.join('.', 'tmp', 'tensorboard')
 logger = get_logger()
 
 def ensure_directory(path, logger = logger):
@@ -39,7 +39,10 @@ def get_tensorboard_directory(project_name, start_time=get_start_time(), fname=g
 def get_model_file(output_dir, fname=get_filename(), ts=get_start_time()):
     return os.path.join(output_dir, "model-{}-{}.h5".format(fname, ts))
 
-def limit_gpu_memory(frac=0.75):
-    config = tf.ConfigProto()
-    config.gpu_options.per_process_gpu_memory_fraction = frac
-    set_session(tf.Session(config=config))
+def limit_gpu_memory(frac=0.8):
+    config = tf.compat.v1.ConfigProto(gpu_options=
+                                      tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=frac)
+                                      )
+    config.gpu_options.allow_growth = True
+    session = tf.compat.v1.Session(config=config)
+    tf.compat.v1.keras.backend.set_session(session)

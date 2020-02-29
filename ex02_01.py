@@ -9,10 +9,12 @@ from shared.logger import get_logger, get_filename, get_start_time, get_curr_tim
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, get_model_file, limit_gpu_memory
+import os
 
+limit_gpu_memory()
 PROJECT_NAME="mnist"
-OUTPUT_DIR="output/ex02"
+OUTPUT_DIR=os.path.join("output", "ex02")
 TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
 logger = get_logger()
 ensure_directory(OUTPUT_DIR, logger)
