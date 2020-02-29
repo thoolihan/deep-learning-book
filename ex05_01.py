@@ -7,14 +7,16 @@ from shared.logger import get_logger, get_filename, get_start_time, get_curr_tim
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot, ensure_directory, get_tensorboard_directory
+from shared.utility import open_plot, ensure_directory, get_tensorboard_directory, limit_gpu_memory
+import os
 
 logger = get_logger()
+limit_gpu_memory()
 
 # Constants and Config for index, features, and label
 PROJECT_NAME="ex05"
-INPUT_DIR="data/{}".format(PROJECT_NAME)
-OUTPUT_DIR="output/{}".format(PROJECT_NAME)
+INPUT_DIR=os.path.join("data", PROJECT_NAME)
+OUTPUT_DIR=os.path.join("output", PROJECT_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 DRO = 0.25
 HLAYER = 64
