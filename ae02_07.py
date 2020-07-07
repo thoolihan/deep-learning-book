@@ -16,10 +16,10 @@ logger = get_logger()
 OUTPUT_DIR="output/ae02"
 ensure_directory(OUTPUT_DIR, logger)
 ENCODING_SHAPE = (128,)
-EPOCHS = 100
+EPOCHS = 1
 BATCH_SIZE = 128
 ACTIVITY_REG = 10e-7
-TBLOGDIR="/tmp/autoencoder/{}".format(get_start_time())
+TBLOGDIR="./tmp/autoencoder/{}".format(get_start_time())
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
@@ -70,8 +70,7 @@ history = autoencoder.fit(train_images_noise,
                 epochs=EPOCHS,
                 batch_size=BATCH_SIZE,
                 shuffle=True,
-                validation_data=(test_images_noise, test_images),
-                callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+                validation_data=(test_images_noise, test_images))
 
 # look at summaries
 logger.info("Autoencoder loss: {}".format(history.history['loss'][-1]))

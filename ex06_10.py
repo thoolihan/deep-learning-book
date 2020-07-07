@@ -28,7 +28,7 @@ ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 SAVE_MODEL=True
 
-EPOCHS = 10
+EPOCHS = 2
 BATCH_SIZE=128
 NUM_WORDS = 10000
 DIM = 32
