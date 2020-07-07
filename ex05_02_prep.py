@@ -1,9 +1,10 @@
 import os, shutil
 from shared.logger import get_logger
-from shared.utility import ensure_directory
+from shared.utility import ensure_directory, limit_gpu_memory
 import numpy as np
 
 logger = get_logger()
+limit_gpu_memory()
 
 project = "dogs_cats"
 

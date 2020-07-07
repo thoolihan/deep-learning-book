@@ -1,17 +1,19 @@
 from keras.datasets import mnist
-from keras import models
-from keras import layers
-from keras.utils import to_categorical
+from tensorflow.keras import models
+from tensorflow.keras import layers
+from tensorflow.keras.utils import to_categorical
 from shared.logger import get_logger, get_filename, get_start_time, get_curr_time
 from shared.transform import flatten, scale
 from shared.metrics import f1_score
 from shared.plot_history import plot_all
-from shared.utility import open_plot, ensure_directory
+from shared.utility import open_plot, ensure_directory, limit_gpu_memory
 import numpy as np
+import os
 
 logger = get_logger()
+limit_gpu_memory()
 
-OUTPUT_DIR="output/ae02"
+OUTPUT_DIR=os.path.join("output", "ae02")
 ensure_directory(OUTPUT_DIR, logger)
 ENCODING_DIM = 36
 ENCODING_SHAPE = (ENCODING_DIM,)

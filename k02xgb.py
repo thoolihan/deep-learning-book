@@ -6,6 +6,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 from shared.logger import get_logger, get_start_time, get_filename, get_curr_time
 from shared.donors.transform import count_essays, ESSAY_COUNT, resources_total
+from shared.utility import ensure_directory
 from hashlib import md5
 from pathlib import Path
 
@@ -56,7 +57,9 @@ test_df = pd.read_csv("{}/test.zip".format(INPUT_DIR), usecols=COLS, index_col =
 fields = ":".join(COLS)
 hash = md5(fields.encode('utf-8')).hexdigest()
 logger.debug("columns hash is {}".format(hash))
-cached_numpy_file = Path("{}/cached/{}.npz".format(INPUT_DIR, hash))
+CACHE_DIR = os.path.join("{}/cached".format(INPUT_DIR))
+ensure_directory(CACHE_DIR, logger)
+cached_numpy_file = Path("{}/{}.npz".format(CACHE_DIR, hash))
 
 if cached_numpy_file.exists() and not(CLEAR_CACHE):
     logger.info("reading cached files from numpy zip")
