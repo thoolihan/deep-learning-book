@@ -17,7 +17,6 @@ logger = get_logger()
 PROJECT_NAME = "imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
-#GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
 GLOVE_HOME = os.path.join(*get_config_value("glove_dir"))
 EMBEDDINGS_DIMENSIONS = 100
 EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
