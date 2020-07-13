@@ -1,4 +1,3 @@
-from keras.preprocessing.text import Tokenizer
 from shared.logger import get_logger
 import numpy as np
 from pprint import pprint
