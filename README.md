@@ -1,4 +1,5 @@
-# Book Examples from Deep Learning with Python by François Chollet
+# Deep Learning
+## Book Examples from Deep Learning with Python by François Chollet
 Working through [Deep Learning with Python](https://www.manning.com/books/deep-learning-with-python) by [François Chollet](https://github.com/fchollet).
 
 François Chollet can be found at:
@@ -7,7 +8,10 @@ François Chollet can be found at:
 * [@fchollet on github](https://github.com/fchollet)
 * [google research](https://research.google.com/pubs/105096.html)
 
-# Running on EC2
+## Setup
+`cp config.json.sample config.json`
+
+## Running on EC2
 ```
 cd ops
 terraform plan

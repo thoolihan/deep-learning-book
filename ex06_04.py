@@ -11,28 +11,30 @@ from shared.utility import ensure_directory, get_tensorboard_directory, get_mode
 logger = get_logger()
 
 # Constants and Config for index, features, and label
-PROJECT_NAME="imdb"
-INPUT_DIR="data/{}".format(PROJECT_NAME)
-OUTPUT_DIR="output/{}".format(PROJECT_NAME)
+PROJECT_NAME = "imdb"
+INPUT_DIR = "data/{}".format(PROJECT_NAME)
+OUTPUT_DIR = "output/{}".format(PROJECT_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 30
-BATCH_SIZE=64
-NUM_WORDS = 1000
-DIMS = 8 #64
+BATCH_SIZE = 64
+NUM_WORDS = 800
+DIMS = 8  # 64
 MAX_FEATURES = 10000
 MAX_LEN = 25
-TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
+TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
+
 
 def show_shapes(msg=""):
     logger.info(msg)
     logger.info("x_train.shape: {}".format(x_train.shape))
     logger.info("y_train.shape: {}".format(y_train.shape))
     logger.info("x_test.shape: {}".format(x_test.shape))
-    logger.info("y_test.shape: {}".format(y_test.shape))    
+    logger.info("y_test.shape: {}".format(y_test.shape))
 
-(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words = MAX_FEATURES)
+
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=MAX_FEATURES)
 
 show_shapes("after imdb load")
 
@@ -50,10 +52,8 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc', f1_score])
 model.summary()
 
-history = model.fit(x_train, 
+history = model.fit(x_train,
                     y_train,
                     epochs=EPOCHS,
                     batch_size=BATCH_SIZE,
-                    validation_split=0.2,
-                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
-
+                    validation_split=0.2)

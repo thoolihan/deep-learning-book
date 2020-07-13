@@ -1,26 +1,33 @@
 import os
 import numpy as np
 from tensorflow.keras.layers import Embedding
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
 from shared.metrics import f1_score
 from tensorflow.keras.callbacks import TensorBoard
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value
 
 logger = get_logger()
 
 # Constants and Config for index, features, and label
-PROJECT_NAME="imdb"
+PROJECT_NAME = "imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
-GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
+#GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
+GLOVE_HOME = os.path.join(*get_config_value("glove_dir"))
 EMBEDDINGS_DIMENSIONS = 100
 EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
+if os.path.exists(EMBEDDINGS_PATH):
+    logger.info("Confirmed embeddings exist at: {}".format(EMBEDDINGS_PATH))
+    logger.info("File Size: {:.1f} MB".format(os.path.getsize(EMBEDDINGS_PATH) / 1024 ** 2))
+else:
+    logger.error("Embeddings do not exist at: {}".format(EMBEDDINGS_PATH))
+    exit(1)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 10
@@ -29,18 +36,21 @@ NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
 VAL_SIZE = 10000
-TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
-SAVE_MODEL=True
+TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
+SAVE_MODEL = True
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
+ensure_directory(TRAIN_DIR, logger)
 TEST_DIR = os.path.join(INPUT_DIR, "test")
+ensure_directory(TEST_DIR, logger)
 
 labels = []
 texts = []
 
 for label_type in ['neg', 'pos']:
     dir_name = os.path.join(TRAIN_DIR, label_type)
+    ensure_directory(dir_name, logger)
     for fname in os.listdir(dir_name):
         if fname[-4:] == '.txt':
             with open(os.path.join(dir_name, fname)) as f:
@@ -79,6 +89,9 @@ logger.info("Loading Embeddings...")
 logger.info("Embeddings File: {}".format(EMBEDDINGS_PATH))
 embeddings_index = {}
 i = 0
+
+
+
 with open(EMBEDDINGS_PATH) as fh:
     for line in fh:
         values = line.split()
@@ -118,8 +131,7 @@ model.compile(optimizer='rmsprop',
 history = model.fit(x_train, y_train,
                    epochs=EPOCHS,
                    batch_size=BATCH_SIZE,
-                   validation_data=(x_val, y_val),
-                   callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+                   validation_data=(x_val, y_val))
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
