@@ -1,0 +1,3 @@
+{
+  "glove_dir": ["~", "workspace", "Embeddings", "glove"]
+}
