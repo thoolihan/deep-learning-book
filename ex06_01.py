@@ -8,7 +8,9 @@ for sample in samples:
     for word in sample.split():
         if word not in token_index:
             token_index[word] = len(token_index) + 1
-            
+
+print(token_index)
+
 n_samples = len(samples)            
 max_length = max([len(sample.split()) for sample in samples])
 token_count = max(token_index.values()) + 1
