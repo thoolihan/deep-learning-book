@@ -16,12 +16,12 @@ INPUT_DIR = "data/{}".format(PROJECT_NAME)
 OUTPUT_DIR = "output/{}".format(PROJECT_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
-EPOCHS = 30
-BATCH_SIZE = 64
-NUM_WORDS = 800
-DIMS = 8  # 64
-MAX_FEATURES = 10000
-MAX_LEN = 20
+EPOCHS = 20
+BATCH_SIZE = 256
+DIMS = 64
+MAX_FEATURES = 5000
+NUM_WORDS = MAX_FEATURES
+MAX_LEN = 25
 TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
@@ -44,7 +44,7 @@ x_test = preprocessing.sequence.pad_sequences(x_test, maxlen=MAX_LEN)
 show_shapes("after padding sequences")
 
 model = Sequential()
-model.add(Embedding(MAX_FEATURES, DIMS, input_length=MAX_LEN))
+model.add(Embedding(NUM_WORDS, DIMS, input_length=MAX_LEN))
 
 model.add(Flatten())
 

@@ -15,3 +15,5 @@ __pycache__
 .terraform
 
 .Rproj.user
+/dlbook.Rproj
+/.Rhistory
