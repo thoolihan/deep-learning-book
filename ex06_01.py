@@ -7,7 +7,7 @@ token_index = {}
 for sample in samples:
     for word in sample.split():
         if word not in token_index:
-            token_index[word] = len(token_index) + 1
+            token_index[word] = len(token_index) #+ 1
 
 print(token_index)
 
