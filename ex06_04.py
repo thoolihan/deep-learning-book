@@ -6,8 +6,9 @@ from tensorflow.keras.layers import Flatten, Dense
 from shared.logger import get_logger
 from shared.metrics import f1_score
 from tensorflow.keras.callbacks import TensorBoard
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, limit_gpu_memory
 
+limit_gpu_memory()
 logger = get_logger()
 
 # Constants and Config for index, features, and label
@@ -19,8 +20,7 @@ MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 20
 BATCH_SIZE = 256
 DIMS = 64
-MAX_FEATURES = 5000
-NUM_WORDS = MAX_FEATURES
+MAX_FEATURES = 10000
 MAX_LEN = 25
 TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
@@ -44,7 +44,7 @@ x_test = preprocessing.sequence.pad_sequences(x_test, maxlen=MAX_LEN)
 show_shapes("after padding sequences")
 
 model = Sequential()
-model.add(Embedding(NUM_WORDS, DIMS, input_length=MAX_LEN))
+model.add(Embedding(MAX_FEATURES, DIMS, input_length=MAX_LEN))
 
 model.add(Flatten())
 
