@@ -7,30 +7,31 @@ from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
-from shared.metrics import f1_score
 from tensorflow.keras.callbacks import TensorBoard
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, limit_gpu_memory, \
+    get_config_value
 
 logger = get_logger()
+limit_gpu_memory()
 
 # Constants and Config for index, features, and label
-PROJECT_NAME="imdb"
+PROJECT_NAME = "imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
-GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
+GLOVE_HOME = os.path.join(*get_config_value("glove_dir"))
 EMBEDDINGS_DIMENSIONS = 100
 EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 10
-BATCH_SIZE=32
+BATCH_SIZE = 32
 NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
 VAL_SIZE = 10000
-TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
-SAVE_MODEL=False
+TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
+SAVE_MODEL = False
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
@@ -43,7 +44,7 @@ for label_type in ['neg', 'pos']:
     dir_name = os.path.join(TRAIN_DIR, label_type)
     for fname in os.listdir(dir_name):
         if fname[-4:] == '.txt':
-            with open(os.path.join(dir_name, fname)) as f:
+            with open(os.path.join(dir_name, fname), encoding="utf8") as f:
                 texts.append(f.read())
                 if label_type == 'neg':
                     labels.append(0)
@@ -77,16 +78,16 @@ y_val = labels[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
         
 logger.info("Defining Model")
 model = Sequential()
-model.add(Embedding(NUM_WORDS, EMBEDDINGS_DIMENSIONS, input_length = MAX_LEN))
+model.add(Embedding(NUM_WORDS, EMBEDDINGS_DIMENSIONS, input_length=MAX_LEN))
 model.add(Flatten())
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(1, activation = 'sigmoid'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
 model.summary()
 
 logger.info("Fitting model...")
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
-              metrics=['acc', f1_score])
+              metrics=['acc'])
 history = model.fit(x_train, y_train,
                    epochs=EPOCHS,
                    batch_size=BATCH_SIZE,

@@ -11,15 +11,17 @@ from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
 from shared.metrics import f1_score
 from tensorflow.keras.callbacks import TensorBoard
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, limit_gpu_memory, \
+    get_config_value
 
+limit_gpu_memory()
 logger = get_logger()
 
 # Constants and Config for index, features, and label
 PROJECT_NAME="imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
-GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
+GLOVE_HOME = os.path.join(*get_config_value("glove_dir"))
 EMBEDDINGS_DIMENSIONS = 100
 EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
@@ -45,7 +47,7 @@ for label_type in ['neg', 'pos']:
     dir_name = os.path.join(TRAIN_DIR, label_type)
     for fname in os.listdir(dir_name):
         if fname[-4:] == '.txt':
-            with open(os.path.join(dir_name, fname)) as f:
+            with open(os.path.join(dir_name, fname), encoding="utf8") as f:
                 texts.append(f.read())
                 if label_type == 'neg':
                     labels.append(0)
@@ -81,7 +83,7 @@ logger.info("Loading Embeddings...")
 logger.info("Embeddings File: {}".format(EMBEDDINGS_PATH))
 embeddings_index = {}
 i = 0
-with open(EMBEDDINGS_PATH) as fh:
+with open(EMBEDDINGS_PATH, encoding="utf8") as fh:
     for line in fh:
         values = line.split()
         word = values[0]
@@ -120,8 +122,7 @@ model.compile(optimizer='rmsprop',
 history = model.fit(x_train, y_train,
                    epochs=EPOCHS,
                    batch_size=BATCH_SIZE,
-                   validation_data=(x_val, y_val),
-                   callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+                   validation_data=(x_val, y_val))
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
@@ -136,7 +137,7 @@ for label_type in ['neg', 'pos']:
     dir_name = os.path.join(TRAIN_DIR, label_type)
     for fname in os.listdir(dir_name):
         if fname[-4:] == '.txt':
-            with open(os.path.join(dir_name, fname)) as f:
+            with open(os.path.join(dir_name, fname), encoding="utf8") as f:
                 texts.append(f.read())
                 if label_type == 'neg':
                     labels.append(0)

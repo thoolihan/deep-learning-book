@@ -6,7 +6,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value, limit_gpu_memory
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value, \
+    limit_gpu_memory
 
 limit_gpu_memory()
 logger = get_logger()
