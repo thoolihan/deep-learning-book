@@ -11,12 +11,13 @@ from tensorflow.keras.datasets import imdb
 
 from shared.logger import get_logger
 from shared.metrics import f1_score
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, limit_gpu_memory
 
+limit_gpu_memory()
 logger = get_logger()
 
 # Constants and Config for index, features, and label
-PROJECT_NAME="imdb-lstm"
+PROJECT_NAME = "imdb-lstm"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
 GLOVE_HOME = os.path.join(os.path.expanduser("~"), "workspace", "Embeddings", "glove")
