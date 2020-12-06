@@ -1,14 +1,11 @@
 import os
 import numpy as np
-from tensorflow.keras.layers import Embedding
+from ensure import ensure
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
-from shared.metrics import f1_score
-from tensorflow.keras.callbacks import TensorBoard
 from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value, limit_gpu_memory
 
 limit_gpu_memory()
@@ -42,8 +39,6 @@ logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
 ensure_directory(TRAIN_DIR, logger)
-TEST_DIR = os.path.join(INPUT_DIR, "test")
-ensure_directory(TEST_DIR, logger)
 
 labels = []
 texts = []
@@ -53,7 +48,7 @@ for label_type in ['neg', 'pos']:
     ensure_directory(dir_name, logger)
     for fname in os.listdir(dir_name):
         if fname[-4:] == '.txt':
-            with open(os.path.join(dir_name, fname)) as f:
+            with open(os.path.join(dir_name, fname), encoding="utf8") as f:
                 texts.append(f.read())
                 if label_type == 'neg':
                     labels.append(0)
@@ -85,6 +80,11 @@ y_train = labels[:TRAIN_SIZE]
 x_val = data[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
 y_val = labels[TRAIN_SIZE:(TRAIN_SIZE + VAL_SIZE)]
 
+ensure(len(x_train)).is_greater_than_or_equal_to(1)
+ensure(len(y_train)).is_greater_than_or_equal_to(1)
+ensure(len(x_val)).is_greater_than_or_equal_to(1)
+ensure(len(y_val)).is_greater_than_or_equal_to(1)
+
 logger.info("Loading Embeddings...")
 logger.info("Embeddings File: {}".format(EMBEDDINGS_PATH))
 embeddings_index = {}
@@ -102,7 +102,7 @@ with open(EMBEDDINGS_PATH, encoding="utf8") as fh:
         
 logger.info('Found {} word vectors'.format(len(embeddings_index)))
 
-logger.info("Converting tokerizer index to embeddings matrix")
+logger.info("Converting tokenizer index to embeddings matrix")
 embedding_matrix = np.zeros((NUM_WORDS, EMBEDDINGS_DIMENSIONS))
 for word, i in word_index.items():
     if i < NUM_WORDS:
@@ -112,10 +112,10 @@ for word, i in word_index.items():
         
 logger.info("Defining Model")
 model = Sequential()
-model.add(Embedding(NUM_WORDS, EMBEDDINGS_DIMENSIONS, input_length = MAX_LEN))
+model.add(Embedding(NUM_WORDS, EMBEDDINGS_DIMENSIONS, input_length=MAX_LEN))
 model.add(Flatten())
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(1, activation = 'sigmoid'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
 model.summary()
 
 logger.info("Loading embeddings matrix into first model layer (Embedding Layer)")
@@ -125,7 +125,7 @@ model.layers[0].trainable = False
 logger.info("Fitting model...")
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
-              metrics=['acc', f1_score])
+              metrics=['acc'])
 history = model.fit(x_train, y_train,
                    epochs=EPOCHS,
                    batch_size=BATCH_SIZE,
