@@ -9,8 +9,9 @@ from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
 from shared.metrics import f1_score
 from tensorflow.keras.callbacks import TensorBoard
-from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value
+from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value, limit_gpu_memory
 
+limit_gpu_memory()
 logger = get_logger()
 
 # Constants and Config for index, features, and label
@@ -30,7 +31,7 @@ else:
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
 EPOCHS = 10
-BATCH_SIZE=32
+BATCH_SIZE = 16
 NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
@@ -89,9 +90,7 @@ logger.info("Embeddings File: {}".format(EMBEDDINGS_PATH))
 embeddings_index = {}
 i = 0
 
-
-
-with open(EMBEDDINGS_PATH) as fh:
+with open(EMBEDDINGS_PATH, encoding="utf8") as fh:
     for line in fh:
         values = line.split()
         word = values[0]
