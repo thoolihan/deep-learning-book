@@ -2,10 +2,8 @@
 
 import os
 import numpy as np
-from tensorflow.keras.layers import Embedding
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
@@ -18,7 +16,7 @@ limit_gpu_memory()
 logger = get_logger()
 
 # Constants and Config for index, features, and label
-PROJECT_NAME="imdb"
+PROJECT_NAME = "imdb"
 INPUT_DIR = os.path.join("data", PROJECT_NAME)
 OUTPUT_DIR = os.path.join("output", PROJECT_NAME)
 GLOVE_HOME = os.path.join(*get_config_value("glove_dir"))
@@ -33,8 +31,8 @@ NUM_WORDS = 10000
 MAX_LEN = 100
 TRAIN_SIZE = 200
 VAL_SIZE = 10000
-TBLOGDIR=get_tensorboard_directory(PROJECT_NAME)
-SAVE_MODEL=True
+TBLOGDIR = get_tensorboard_directory(PROJECT_NAME)
+SAVE_MODEL = True
 logger.info("Tensorboard is at: {}".format(TBLOGDIR))
 
 TRAIN_DIR = os.path.join(INPUT_DIR, "train")
