@@ -95,7 +95,7 @@ with open(EMBEDDINGS_PATH, encoding="utf8") as fh:
         
 logger.info('Found {} word vectors'.format(len(embeddings_index)))
 
-logger.info("Converting tokerizer index to embeddings matrix")
+logger.info("Converting tokenizer index to embeddings matrix")
 embedding_matrix = np.zeros((NUM_WORDS, EMBEDDINGS_DIMENSIONS))
 for word, i in word_index.items():
     if i < NUM_WORDS:
@@ -120,9 +120,10 @@ model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['acc', f1_score])
 history = model.fit(x_train, y_train,
-                   epochs=EPOCHS,
-                   batch_size=BATCH_SIZE,
-                   validation_data=(x_val, y_val))
+                    epochs=EPOCHS,
+                    batch_size=BATCH_SIZE,
+                    validation_data=(x_val, y_val),
+                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
@@ -150,4 +151,4 @@ x_test = pad_sequences(sequences, maxlen=MAX_LEN)
 y_test = np.asarray(labels)
 
 logger.info("Evaluate test set")
-model.evaluate(x_test, y_test)
+model.evaluate(x_test, y_test, callbacks=[TensorBoard(log_dir=TBLOGDIR)])

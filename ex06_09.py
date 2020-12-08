@@ -27,7 +27,7 @@ EMBEDDINGS_FILE_NAME = "glove.6B.{}d.txt".format(EMBEDDINGS_DIMENSIONS)
 EMBEDDINGS_PATH = os.path.join(GLOVE_HOME, EMBEDDINGS_FILE_NAME)
 ensure_directory(OUTPUT_DIR, logger)
 MODEL_FILE = get_model_file(OUTPUT_DIR)
-SAVE_MODEL=True
+SAVE_MODEL = True
 
 EPOCHS = 10
 BATCH_SIZE=128
@@ -57,11 +57,11 @@ logger.debug(model.summary())
 
 model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc', f1_score])
 history = model.fit(input_train,
-                   y_train,
-                   epochs=EPOCHS,
-                   batch_size=BATCH_SIZE,
-                   validation_split=0.2,
-                   callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+                    y_train,
+                    epochs=EPOCHS,
+                    batch_size=BATCH_SIZE,
+                    validation_split=0.2,
+                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 logger.info("Running model.evaluate on test set...")
 model.evaluate(input_test, y_test)
@@ -71,4 +71,3 @@ if SAVE_MODEL:
     logger.info("model weights saved at: {}".format(MODEL_FILE))
 else:
     logger.info("did NOT save model weights at {}, change flag if you meant to".format(MODEL_FILE))
-    
