@@ -56,4 +56,5 @@ history = model.fit(x_train,
                     y_train,
                     epochs=EPOCHS,
                     batch_size=BATCH_SIZE,
-                    validation_split=0.2)
+                    validation_split=0.2,
+                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
