@@ -71,4 +71,3 @@ if SAVE_MODEL:
     logger.info("model weights saved at: {}".format(MODEL_FILE))
 else:
     logger.info("did NOT save model weights at {}, change flag if you meant to".format(MODEL_FILE))
-    
