@@ -5,6 +5,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
+from tensorflow.keras.callbacks import TensorBoard
 from shared.logger import get_logger
 from shared.utility import ensure_directory, get_tensorboard_directory, get_model_file, get_config_value, \
     limit_gpu_memory
@@ -128,9 +129,10 @@ model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['acc'])
 history = model.fit(x_train, y_train,
-                   epochs=EPOCHS,
-                   batch_size=BATCH_SIZE,
-                   validation_data=(x_val, y_val))
+                    epochs=EPOCHS,
+                    batch_size=BATCH_SIZE,
+                    validation_data=(x_val, y_val),
+                    callbacks=TensorBoard(log_dir=TBLOGDIR))
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
