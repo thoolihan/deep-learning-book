@@ -1,9 +1,7 @@
 import os
 import numpy as np
-from tensorflow.keras.layers import Embedding
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Flatten, Dense
 from shared.logger import get_logger
@@ -89,10 +87,10 @@ model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['acc'])
 history = model.fit(x_train, y_train,
-                   epochs=EPOCHS,
-                   batch_size=BATCH_SIZE,
-                   validation_data=(x_val, y_val),
-                   callbacks=[TensorBoard(log_dir=TBLOGDIR)])
+                    epochs=EPOCHS,
+                    batch_size=BATCH_SIZE,
+                    validation_data=(x_val, y_val),
+                    callbacks=[TensorBoard(log_dir=TBLOGDIR)])
 
 if SAVE_MODEL:
     model.save_weights(MODEL_FILE)
