@@ -4,16 +4,16 @@ SHELL := /bin/bash
 venv = dlb2
 
 cleantensorboard:
-	rm -rfv /tmp/tensorboard/*
+	-rm -rfv /tmp/tensorboard/*
 
 cleanlogs:
-	rm -fv logs/*.txt
+	-rm -fv logs/*.txt
 
 cleanmodels:
-	rm -fv output/**/*.h5
+	-rm -fv output/**/*.h5
 
 cleancharts:
-	rm -fv output/**/*.png
+	-rm -fv output/**/*.png
 
 requirements-gpu.txt: requirements.txt
 	echo "### DO NOT EDIT: GENERATE WITH 'make requirements-gpu.txt' ###" > requirements-gpu.txt
