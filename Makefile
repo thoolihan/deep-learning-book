@@ -1,4 +1,7 @@
 .PHONY: cleantensorboard cleanlogs cleanmodels cleancharts test
+SHELL := /bin/bash
+
+venv = dlb2
 
 cleantensorboard:
 	rm -rfv /tmp/tensorboard/*
@@ -17,4 +20,5 @@ requirements-gpu.txt: requirements.txt
 	sed "s/tensorflow=/tensorflow-gpu=/g" requirements.txt >> requirements-gpu.txt
 
 test:
-	python ex02_01.py
+	source ~/.venvs/$(venv)/bin/activate; \
+	python tests/test_tensorflow.py
